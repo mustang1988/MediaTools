@@ -42,12 +42,13 @@ export class OptionFactory {
 
     static CreateRatioOption(
         name: string,
-        value: IRatio,
+        value: string,
         priority?: number,
         multiple?: boolean,
         conflicts?: string[]
     ): RatioOption | null {
-        return new RatioOption(name, value, priority, multiple, conflicts);
+        const v = RatioParser.ParseFromString(value);
+        return _.isNil(v) ? null : new RatioOption(name, v, priority, multiple, conflicts);
     }
 
     static CreateEnumOption<T>(
