@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { RatioParser } from "../ratio/RatioParser";
-import { IRatio } from "../type/IRatio";
 import { NumberProperty } from "./NumberProperty";
 import { ObjectProperty } from "./ObjectProperty";
 import { RatioProperty } from "./RatioProperty";

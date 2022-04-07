@@ -1,6 +1,4 @@
 import _ from "lodash";
-import { Reader } from "../execution/Reader";
-import { IReader } from "../type/execution/IReader";
 import { IAudioStream } from "../type/media/IAudioStream";
 import { IFormat } from "../type/media/IFormat";
 import { IMedia } from "../type/media/IMedia";

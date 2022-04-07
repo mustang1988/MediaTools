@@ -1,21 +1,18 @@
 import { exec, execSync } from "child_process";
 import { existsSync } from "fs";
-import _, { size } from "lodash";
+import _ from "lodash";
 import { EnumColorspace } from "../enumeration/EnumColorspace";
 import { EnumConcatSafe } from "../enumeration/EnumConcatSafe";
 import { EnumH26XPreset } from "../enumeration/EnumH26XPreset";
 import { EnumH26XProfile } from "../enumeration/EnumH26XProfile";
 import { EnumHLSSegmentType } from "../enumeration/EnumHLSSegmentType";
-import { EnumLogLevel } from "../enumeration/EnumLogLevel";
 import { EnumVPXDeadline } from "../enumeration/EnumVPXDeadline";
 import { EnumVPXQuality } from "../enumeration/EnumVPXQuality";
 import { MediaParser } from "../media/MediaParser";
 import { OptionFactory } from "../option/OptionFactory";
-import { IReader } from "../type/execution/IReader";
 import { ITranscoder } from "../type/execution/ITranscoder";
 import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
-import { Reader } from "./Reader";
 
 export class Transcoder implements ITranscoder {
     _bin: string;
@@ -97,7 +94,7 @@ export class Transcoder implements ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('', output, 9.1));
     }
 
-    y(confirm: boolean = true): ITranscoder {
+    y(confirm = true): ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-threads', confirm, 8));
     }
 
@@ -110,7 +107,7 @@ export class Transcoder implements ITranscoder {
     }
 
     safe(safe?: EnumConcatSafe): ITranscoder {
-        throw new Error("Method not implemented.");
+        return this.#setOption(OptionFactory.CreateEnumOption('-safe', _.isNil(safe) ? EnumConcatSafe.UNSAFE : safe, 3));
     }
 
     dn(confirm?: boolean): ITranscoder {
@@ -293,7 +290,7 @@ export class Transcoder implements ITranscoder {
     execute(): Promise<string> {
         const command = this.#buildCommand().join(' ');
         return new Promise((resolve, reject) => {
-            exec(command, (error, stdout, stderr) => {
+            exec(command, (error, stdout) => {
                 if (!_.isNil(error)) {
                     reject(error);
                 }
@@ -320,7 +317,7 @@ export class Transcoder implements ITranscoder {
 
     #buildCommand(): string[] {
         this._options.sort((o1, o2) => o1.getPriority() - o2.getPriority());
-        let args: string[] = [];
+        const args: string[] = [];
         for (const opt of this._options) {
             args.push(...opt.toArray());
         }

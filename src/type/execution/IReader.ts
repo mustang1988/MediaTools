@@ -1,7 +1,6 @@
 import { EnumLogLevel } from "../../enumeration/EnumLogLevel";
 import { EnumPrintFormat } from '../../enumeration/EnumPrintFormat';
 import { EnumSelectStream } from "../../enumeration/EnumSelectStream";
-import { IOption } from "../IOption";
 import { IMedia } from "../media/IMedia";
 
 export interface IReader {

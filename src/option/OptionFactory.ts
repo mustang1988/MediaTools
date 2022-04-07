@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { RatioParser } from "../ratio/RatioParser";
-import { IRatio } from "../type/IRatio";
 import { BooleanOption } from "./BooleanOption";
 import { EnumOption } from "./EnumOption";
 import { NumberOption } from "./NumberOption";

@@ -91,14 +91,13 @@ export class Reader implements IReader {
     execute(): Promise<IMedia> {
         const cmd = this.#buildCommand().join(' ');
         return new Promise((resolve, reject) => {
-            try {
-                exec(cmd, (error, stdout, stderr) => {
-                    const metadata = JSON.parse(stdout.toString());
-                    resolve(new Media(metadata))
-                })
-            } catch (error) {
-                reject(error)
-            }
+            exec(cmd, (error, stdout) => {
+                if (!_.isNil(error)) {
+                    reject(error)
+                }
+                const metadata = JSON.parse(stdout.toString());
+                resolve(new Media(metadata))
+            })
         });
     }
 
@@ -120,10 +119,10 @@ export class Reader implements IReader {
         this._options.push(option);
         return this;
     }
-    
+
     #buildCommand(): string[] {
         this._options.sort((o1, o2) => o1.getPriority() - o2.getPriority());
-        let args: string[] = [];
+        const args: string[] = [];
         for (const opt of this._options) {
             args.push(...opt.toArray());
         }
