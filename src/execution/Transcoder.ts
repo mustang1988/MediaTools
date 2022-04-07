@@ -10,6 +10,7 @@ import { EnumVPXDeadline } from "../enumeration/EnumVPXDeadline";
 import { EnumVPXQuality } from "../enumeration/EnumVPXQuality";
 import { MediaParser } from "../media/MediaParser";
 import { OptionFactory } from "../option/OptionFactory";
+import { RatioOption } from "../option/RatioOption";
 import { ITranscoder } from "../type/execution/ITranscoder";
 import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
@@ -18,6 +19,7 @@ export class Transcoder implements ITranscoder {
     _bin: string;
     _options: IOption<any>[];
     _source_media?: IMedia;
+    _limit_bit_rate: boolean;
 
     static H26X_OPTION_NAMES = ['-profile:v', '-preset'];
     static VPX_OPTION_NAMES = ['-cpu-used', '-deadline', '-quality', '-frame-parallel', '-level', '-row-mt', '-tile-columns', '-speed'];
@@ -30,12 +32,14 @@ export class Transcoder implements ITranscoder {
         '-b:a', '-c:a', '-channel_layout', '-ar'
     ];
 
+
     constructor(bin?: string) {
         this._bin = _.isUndefined(bin) ? 'ffmpeg' : bin;
         this._options = [
             OptionFactory.CreateStringOption(this._bin, '', 0),
         ];
         this._source_media = undefined;
+        this._limit_bit_rate = false;
     }
 
     getBin(): string {
@@ -45,16 +49,17 @@ export class Transcoder implements ITranscoder {
     i(input: string, source?: boolean, format?: string): ITranscoder {
         if (!_.isUndefined(source) && source && !_.isUndefined(format) && !_.isEmpty(format)) {
             this.#setOption(OptionFactory.CreateStringOption('-i', input, 2.1));
-            return this.#setOption(OptionFactory.CreateStringOption('-f', format, 2.2));
+            return this.#setOption(OptionFactory.CreateStringOption('-f', format, 2.2, true));
         }
         if (existsSync(input)) {
             this._source_media = MediaParser.ReadFromFileSync(input);
-            return this.#setOption(OptionFactory.CreateStringOption('-i', input, 2));
+            return this.#setOption(OptionFactory.CreateStringOption('-i', input, 2, true));
         }
         return this;
     }
 
     b_a(bit_rate: number): ITranscoder {
+        this._limit_bit_rate = true;
         return this.#setOption(OptionFactory.CreateNumberOption('-b:a', bit_rate, 5.2));
     }
 
@@ -259,6 +264,7 @@ export class Transcoder implements ITranscoder {
     }
 
     b_V(bit_rate: number): ITranscoder {
+        this._limit_bit_rate = true;
         return this.#setOption(OptionFactory.CreateNumberOption('-b:v', bit_rate, 4.9));
     }
 
@@ -289,19 +295,25 @@ export class Transcoder implements ITranscoder {
 
     execute(): Promise<string> {
         const command = this.#buildCommand().join(' ');
-        return new Promise((resolve, reject) => {
-            exec(command, (error, stdout) => {
-                if (!_.isNil(error)) {
-                    reject(error);
-                }
-                resolve(stdout.toString())
-            })
-        });
+        return new Promise((resolve, reject) => { });
+        // return new Promise((resolve, reject) => {
+        //     exec(command, (error, stdout) => {
+        //         if (!_.isNil(error)) {
+        //             reject(error);
+        //         }
+        //         resolve(stdout.toString())
+        //     })
+        // });
     }
 
     executeSync(): string {
         const command = this.#buildCommand().join(' ');
-        return execSync(command).toString();
+        return command;
+        // return execSync(command).toString();
+    }
+
+    isBitRateLimit(): boolean {
+        return this._limit_bit_rate;
     }
 
     #setOption(option: IOption<any>): ITranscoder {
@@ -315,12 +327,31 @@ export class Transcoder implements ITranscoder {
         return this;
     }
 
+    // #setOptions(options: IOption<any>[]): ITranscoder {
+    //     for (const option of options) {
+    //         this.#setOption(option);
+    //     }
+    //     return this;
+    // }
+
     #buildCommand(): string[] {
+        this.#autoLimitBitRate();
         this._options.sort((o1, o2) => o1.getPriority() - o2.getPriority());
         const args: string[] = [];
         for (const opt of this._options) {
             args.push(...opt.toArray());
         }
+        _.remove(args, arg => arg === '');
         return args;
+    }
+
+    #autoLimitBitRate(): void {
+        if (!this._limit_bit_rate) {
+            const audio_bit_limit_opt = OptionFactory.CreateAudioBitRateLimitOption(this._source_media);
+            !_.isNil(audio_bit_limit_opt) && this.#setOption(audio_bit_limit_opt);
+            const frame_rate_option = <RatioOption>_.find(this._options, opt => opt.getName() === '-r');
+            const video_bit_limit_opt = OptionFactory.CreateVideoBitRateLimitOption(this._source_media, frame_rate_option);
+            !_.isNil(video_bit_limit_opt) && this.#setOption(video_bit_limit_opt);
+        }
     }
 }

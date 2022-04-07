@@ -103,7 +103,7 @@ export class Reader implements IReader {
 
     executeSync(): IMedia {
         const cmd = this.#buildCommand().join(' ');
-        console.log('cmd =>> ', cmd);
+        // console.log('cmd =>> ', cmd);
         const output = execSync(cmd).toString();
         const metadata = JSON.parse(output);
         return new Media(metadata);

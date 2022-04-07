@@ -21,8 +21,12 @@ export class Ratio implements IRatio {
         return parseFloat(result.toFixed(fix));
 
     }
-    
+
     toString(): string {
         return `${this._dividend}${this._separator}${this._divisor}`;
+    }
+
+    isGreaterThan(num: number): boolean {
+        return this.toNumber() > num;
     }
 }

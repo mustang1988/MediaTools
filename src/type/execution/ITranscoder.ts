@@ -98,4 +98,6 @@ export interface ITranscoder {
     execute(): Promise<string>;
 
     executeSync(): string;
+
+    isBitRateLimit(): boolean;
 }
