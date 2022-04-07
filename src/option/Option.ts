@@ -3,14 +3,14 @@ import { IOption } from "../type/IOption";
 
 export abstract class Option<T> implements IOption<T>{
     _name: string;
-    _value: T;
+    _value: T | null;
     _priority: number;
     _multiple: boolean;
     _conflicts: string[];
 
-    constructor(name: string, value: T, priority?: number, multiple?: boolean, conflicts?: string[]) {
+    constructor(name: string, value?: T, priority?: number, multiple?: boolean, conflicts?: string[]) {
         this._name = name;
-        this._value = value;
+        this._value = _.isUndefined(value) ? null : value;
         this._priority = _.isUndefined(priority) ? 0 : priority;
         this._multiple = _.isUndefined(multiple) ? false : multiple;
         this._conflicts = _.isUndefined(conflicts) ? [] : conflicts;
@@ -19,8 +19,8 @@ export abstract class Option<T> implements IOption<T>{
     getName(): string {
         return this._name;
     }
-    
-    getValue(): T {
+
+    getValue(): T | null {
         return this._value;
     }
 
@@ -37,7 +37,7 @@ export abstract class Option<T> implements IOption<T>{
     }
 
     toArray(): string[] {
-        return this.toString().split(' ');
+        return this.toString().split(' ').filter(s => !_.isEmpty(s));
     }
 
     abstract validate(): boolean;

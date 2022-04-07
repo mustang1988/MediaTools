@@ -3,7 +3,7 @@ import { IRatio } from "../type/IRatio";
 import { Option } from "./Option";
 
 export class RatioOption extends Option<IRatio> {
-    constructor(name: string, value: IRatio, priority?: number, multiple?: boolean, conflicts?: string[]) {
+    constructor(name: string, value?: IRatio, priority?: number, multiple?: boolean, conflicts?: string[]) {
         super(name, value, priority, multiple, conflicts);
     }
 
@@ -12,6 +12,6 @@ export class RatioOption extends Option<IRatio> {
     }
 
     toString(): string {
-        return `${this._name} ${this._value.toString()}`;
+        return this.validate() ? `${this._name} ${this._value?.toString()}` : '';
     }
 }

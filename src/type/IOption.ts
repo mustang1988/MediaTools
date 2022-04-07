@@ -1,7 +1,7 @@
 export interface IOption<T> {
     getName(): string;
-    
-    getValue(): T;
+
+    getValue(): T | null;
 
     getPriority(): number;
 

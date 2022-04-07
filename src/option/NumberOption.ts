@@ -12,9 +12,9 @@ export class NumberOption extends Option<number>{
     }
 
     validate(): boolean {
-        return this._value >= this._min && this._value <= this._max;
+        return !_.isNil(this._value) && this._value >= this._min && this._value <= this._max;
     }
-    
+
     toString(): string {
         return this.validate() ? `${this._name} ${this._value}` : "";
     }
