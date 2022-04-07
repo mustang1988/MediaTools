@@ -79,9 +79,14 @@ export class OptionFactory {
         return null;
     }
 
-    static CreateVideoBitRateLimitOption(media: IMedia | null | undefined, target_frame_rate?: RatioOption): NumberOption | null {
+    static CreateVideoBitRateLimitOption(
+        media: IMedia | null | undefined,
+        target_frame_rate?: RatioOption
+    ): NumberOption | null {
         if (!_.isNil(media) && media.hasVideoStream()) {
-            const frame_rate = !_.isNil(target_frame_rate) ? target_frame_rate.getValue() : media.getVideoStream()?.getRFrameRate()?.getValue();
+            const frame_rate = !_.isNil(target_frame_rate)
+                ? target_frame_rate.getValue()
+                : media.getVideoStream()?.getRFrameRate()?.getValue();
             const width = media.getVideoStream()?.getWidth()?.getValue();
             const height = media.getVideoStream()?.getHeight()?.getValue();
             if (!_.isNil(frame_rate) && !_.isNil(width) && !_.isNil(height)) {

@@ -295,21 +295,19 @@ export class Transcoder implements ITranscoder {
 
     execute(): Promise<string> {
         const command = this.#buildCommand().join(' ');
-        return new Promise((resolve, reject) => { });
-        // return new Promise((resolve, reject) => {
-        //     exec(command, (error, stdout) => {
-        //         if (!_.isNil(error)) {
-        //             reject(error);
-        //         }
-        //         resolve(stdout.toString())
-        //     })
-        // });
+        return new Promise((resolve, reject) => {
+            exec(command, (error, stdout) => {
+                if (!_.isNil(error)) {
+                    reject(error);
+                }
+                resolve(stdout.toString())
+            })
+        });
     }
 
     executeSync(): string {
         const command = this.#buildCommand().join(' ');
-        return command;
-        // return execSync(command).toString();
+        return execSync(command).toString();
     }
 
     isBitRateLimit(): boolean {
