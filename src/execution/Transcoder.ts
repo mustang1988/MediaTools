@@ -81,7 +81,7 @@ export class Transcoder implements ITranscoder {
     }
 
     t(time: number): ITranscoder {
-        return this.#setOption(OptionFactory.CreateNumberOption('-ss', time, 1.2));
+        return this.#setOption(OptionFactory.CreateNumberOption('-t', time, 1.2));
     }
 
     ss(start?: number): ITranscoder {
@@ -89,7 +89,7 @@ export class Transcoder implements ITranscoder {
     }
 
     to(to: number): ITranscoder {
-        return this.#setOption(OptionFactory.CreateNumberOption('-ss', to, 1.1));
+        return this.#setOption(OptionFactory.CreateNumberOption('-to', to, 1.1));
     }
 
     f(format: string): ITranscoder {
@@ -101,7 +101,7 @@ export class Transcoder implements ITranscoder {
     }
 
     y(confirm = true): ITranscoder {
-        return this.#setOption(OptionFactory.CreateBooleanOption('-threads', confirm, 8));
+        return this.#setOption(OptionFactory.CreateBooleanOption('-y', confirm, 8));
     }
 
     threads(threads?: number): ITranscoder {
@@ -141,7 +141,7 @@ export class Transcoder implements ITranscoder {
     }
 
     cpu_used(cpu_used?: number): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateNumberOption('-cpu-used', _.isNil(cpu_used) ? 1 : cpu_used, 4.2));
         }
@@ -149,7 +149,7 @@ export class Transcoder implements ITranscoder {
     }
 
     deadline(deadline?: EnumVPXDeadline): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateEnumOption('-deadline', _.isNil(deadline) ? EnumVPXDeadline.REALTIME : deadline, 4.2));
         }
@@ -157,7 +157,7 @@ export class Transcoder implements ITranscoder {
     }
 
     frame_parallel(enable?: boolean): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateStringOption('-frame-parallel', _.isNil(enable) ? "1" : enable ? "1" : "0", 4.2));
         }
@@ -165,7 +165,7 @@ export class Transcoder implements ITranscoder {
     }
 
     level(level?: number): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateNumberOption('-level', _.isNil(level) ? 6.2 : level, 4.2));
         }
@@ -173,7 +173,7 @@ export class Transcoder implements ITranscoder {
     }
 
     quality(quality?: EnumVPXQuality): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateEnumOption('-quality', _.isNil(quality) ? EnumVPXQuality.REALTIME : quality, 4.2));
         }
@@ -181,7 +181,7 @@ export class Transcoder implements ITranscoder {
     }
 
     row_mt(enable?: boolean): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateStringOption('-row-mt', _.isNil(enable) ? "1" : enable ? "1" : "0", 4.2));
         }
@@ -189,7 +189,7 @@ export class Transcoder implements ITranscoder {
     }
 
     speed(speed?: number): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateNumberOption('-speed', _.isNil(speed) ? 1 : speed, 4.2));
         }
@@ -197,7 +197,7 @@ export class Transcoder implements ITranscoder {
     }
 
     tile_columns(columns?: number): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libvpx-vp9');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateNumberOption('-tile-columns', _.isNil(columns) ? 1 : columns, 4.2));
         }
@@ -205,7 +205,7 @@ export class Transcoder implements ITranscoder {
     }
 
     preset(preset: EnumH26XPreset): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libx264');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libx26'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateEnumOption('-preset', preset, 4.2));
         }
@@ -213,7 +213,7 @@ export class Transcoder implements ITranscoder {
     }
 
     profile(profile: EnumH26XProfile): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue() === 'libx264');
+        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libx26'));
         if (!_.isNil(codec_option)) {
             return this.#setOption(OptionFactory.CreateEnumOption('-profile:v', profile, 4.3));
         }
@@ -270,14 +270,15 @@ export class Transcoder implements ITranscoder {
     }
 
     c_v(codec: string): ITranscoder {
-        if (codec === 'libx264') {
+        if (codec.includes('libx26')) {
             // remove vpx options
             _.remove(this._options, opt => Transcoder.VPX_OPTION_NAMES.includes(opt.getName()));
             this.#setOption(OptionFactory.CreateStringOption('-c:v', codec, 4));
             // auto set h26x options
             this.preset(EnumH26XPreset.ULTRAFAST);
             this.profile(EnumH26XProfile.HIGH);
-        } else if (codec === 'libvpx-vp9') {
+        }
+        if (codec.includes('libvpx')) {
             // remove h26x options
             _.remove(this._options, opt => Transcoder.H26X_OPTION_NAMES.includes(opt.getName()));
             this.#setOption(OptionFactory.CreateStringOption('-c:v', codec, 4));
@@ -307,8 +308,12 @@ export class Transcoder implements ITranscoder {
     }
 
     executeSync(): string {
-        const command = this.#buildCommand().join(COMMAND_SEPERATOR);
-        return execSync(command).toString();
+        try {
+            const command = this.#buildCommand().join(COMMAND_SEPERATOR);
+            return execSync(command).toString();
+        } catch (error) {
+            return (<Error>error).message;
+        }
     }
 
     isBitRateLimit(): boolean {
