@@ -13,17 +13,17 @@ export class AudioStream extends Stream implements IAudioStream {
 
     constructor(metadata: JSON) {
         super(metadata);
-        this.sample_fmt = PropertyFactory.CreateStringProperty(_.get(metadata, 'sample_fmt'));
-        this.sample_rate = PropertyFactory.CreateNumberProperty(_.get(metadata, 'sample_rate'));
-        this.channels = PropertyFactory.CreateNumberProperty(_.get(metadata, 'channels'));
-        this.channel_layout = PropertyFactory.CreateStringProperty(_.get(metadata, 'channel_layout'));
-        this.bits_per_sample = PropertyFactory.CreateNumberProperty(_.get(metadata, 'bits_per_sample'));
+        this.sample_fmt = PropertyFactory.CreateStringProperty(_.get(metadata, 'sample_fmt', null));
+        this.sample_rate = PropertyFactory.CreateNumberProperty(_.get(metadata, 'sample_rate', null));
+        this.channels = PropertyFactory.CreateNumberProperty(_.get(metadata, 'channels', null));
+        this.channel_layout = PropertyFactory.CreateStringProperty(_.get(metadata, 'channel_layout', null));
+        this.bits_per_sample = PropertyFactory.CreateNumberProperty(_.get(metadata, 'bits_per_sample', null));
     }
 
     getSampleFmt(): IProperty<string> | null {
         return this.sample_fmt;
     }
-    
+
     getSampleRate(): IProperty<number> | null {
         return this.sample_rate;
     }

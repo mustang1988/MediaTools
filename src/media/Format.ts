@@ -29,7 +29,7 @@ export class Format implements IFormat {
         this.probe_score = PropertyFactory.CreateNumberProperty(_.get(metadata, 'probe_score', null));
         this.tags = PropertyFactory.CreateObjectProperty(_.get(metadata, 'tags', null));
     }
-    
+
     getFilename(): IProperty<string> | null {
         return this.filename;
     }
@@ -127,9 +127,7 @@ export class Format implements IFormat {
                 key,
                 _.isNil(value)
                     ? null
-                    : value.isRatio()
-                        ? value.getValue().toString()
-                        : value.getValue()
+                    : value.getValue()
             );
         }
         return result;
