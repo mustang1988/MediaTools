@@ -25,7 +25,7 @@ export class VideoStream extends Stream implements IVideoStream {
 
     constructor(metadata: JSON) {
         super(metadata);
-        this.width = PropertyFactory.CreateNumberProperty(_.get(metadata, 'index', null));
+        this.width = PropertyFactory.CreateNumberProperty(_.get(metadata, 'width', null));
         this.height = PropertyFactory.CreateNumberProperty(_.get(metadata, 'height', null));
         this.coded_width = PropertyFactory.CreateNumberProperty(_.get(metadata, 'coded_width', null));
         this.coded_height = PropertyFactory.CreateNumberProperty(_.get(metadata, 'coded_height', null));

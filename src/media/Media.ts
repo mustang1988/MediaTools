@@ -17,7 +17,7 @@ export class Media implements IMedia {
         this.video_stream = null;
         this.audio_stream = null;
         this.format = null;
-        const streams: JSON[] = _.get(metadata, 'streams');
+        const streams: JSON[] = _.get(metadata, 'streams', []);
         for (const stream of streams) {
             const codec_type = _.get(stream, 'codec_type');
             if (codec_type === 'video') {
