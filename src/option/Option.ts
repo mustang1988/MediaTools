@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { COMMAND_SEPERATOR } from "../type/Constrants";
 import { IOption } from "../type/IOption";
 
 export abstract class Option<T> implements IOption<T>{
@@ -37,7 +38,7 @@ export abstract class Option<T> implements IOption<T>{
     }
 
     toArray(): string[] {
-        return this.toString().split(' ').filter(s => !_.isEmpty(s));
+        return _.compact(this.toString().split(COMMAND_SEPERATOR));
     }
 
     abstract validate(): boolean;

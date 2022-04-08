@@ -5,6 +5,7 @@ import { EnumPrintFormat } from "../enumeration/EnumPrintFormat";
 import { EnumSelectStream } from "../enumeration/EnumSelectStream";
 import { Media } from "../media/Media";
 import { OptionFactory } from "../option/OptionFactory";
+import { COMMAND_SEPERATOR } from "../type/Constrants";
 import { IReader } from "../type/execution/IReader";
 import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
@@ -20,7 +21,7 @@ export class Reader implements IReader {
             '',
             0
         )];
-        // auto set -v panic -of json by default
+        // auto set "-v panic" and  "-of json=c=1" by default
         this.v();
         this.of();
     }
@@ -92,7 +93,7 @@ export class Reader implements IReader {
     }
 
     execute(): Promise<IMedia> {
-        const cmd = this.#buildCommand().join(' ');
+        const cmd = this.#buildCommand().join(COMMAND_SEPERATOR);
         return new Promise((resolve, reject) => {
             exec(cmd, (error, stdout) => {
                 if (!_.isNil(error)) {
@@ -105,7 +106,7 @@ export class Reader implements IReader {
     }
 
     executeSync(): IMedia | null {
-        const cmd = this.#buildCommand().join(' ');
+        const cmd = this.#buildCommand().join(COMMAND_SEPERATOR);
         try {
             const output = execSync(cmd).toString();
             const metadata = JSON.parse(output);
@@ -125,7 +126,6 @@ export class Reader implements IReader {
     }
 
     #buildCommand(): string[] {
-        // this.#autoSetOptions();
         this._options.sort((o1, o2) => o1.getPriority() - o2.getPriority());
         const args: string[] = [];
         for (const opt of this._options) {
@@ -133,9 +133,4 @@ export class Reader implements IReader {
         }
         return args;
     }
-
-    // #autoSetOptions(): void {
-    //     _.find(this._options, opt => opt.getName() === '-v') || this.v();
-    //     _.find(this._options, opt => opt.getName() === '-of') || this.of();
-    // }
 }

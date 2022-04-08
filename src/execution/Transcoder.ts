@@ -11,6 +11,7 @@ import { EnumVPXQuality } from "../enumeration/EnumVPXQuality";
 import { MediaParser } from "../media/MediaParser";
 import { OptionFactory } from "../option/OptionFactory";
 import { RatioOption } from "../option/RatioOption";
+import { COMMAND_SEPERATOR } from "../type/Constrants";
 import { ITranscoder } from "../type/execution/ITranscoder";
 import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
@@ -294,7 +295,7 @@ export class Transcoder implements ITranscoder {
     }
 
     execute(): Promise<string> {
-        const command = this.#buildCommand().join(' ');
+        const command = this.#buildCommand().join(COMMAND_SEPERATOR);
         return new Promise((resolve, reject) => {
             exec(command, (error, stdout) => {
                 if (!_.isNil(error)) {
@@ -306,7 +307,7 @@ export class Transcoder implements ITranscoder {
     }
 
     executeSync(): string {
-        const command = this.#buildCommand().join(' ');
+        const command = this.#buildCommand().join(COMMAND_SEPERATOR);
         return execSync(command).toString();
     }
 
@@ -315,12 +316,8 @@ export class Transcoder implements ITranscoder {
     }
 
     #setOption(option: IOption<any>): ITranscoder {
-        if (!option.isMultiple()) {
-            _.remove(this._options, opt => opt.getName() === option.getName());
-        }
-        if (!_.isEmpty(option.getConflicts())) {
-            _.remove(this._options, opt => option.getConflicts().includes(opt.getName()));
-        }
+        !option.isMultiple() && _.remove(this._options, opt => opt.getName() === option.getName());
+        !_.isEmpty(option.getConflicts()) && _.remove(this._options, opt => option.getConflicts().includes(opt.getName()));
         this._options.push(option);
         return this;
     }
