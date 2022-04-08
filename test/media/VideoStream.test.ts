@@ -68,7 +68,7 @@ const normal_data = JSON.parse(`{
 }`);
 const empty_data = JSON.parse('{}');
 
-describe('', () => {
+describe('VideoStream.ts', () => {
     it('constructor', () => {
         const video_stream = new VideoStream(normal_data);
         assert.notDeepEqual(video_stream, null);
