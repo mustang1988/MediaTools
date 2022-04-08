@@ -2,7 +2,7 @@ import { ReaderFactory } from "../execution/ReaderFactory";
 import { IMedia } from "../type/media/IMedia";
 
 export class MediaParser {
-    static ReadFromFileSync(file: string, bin?: string): IMedia {
+    static ReadFromFileSync(file: string, bin?: string): IMedia | null {
         return ReaderFactory.ReadFromFileSync(file, bin);
     }
 

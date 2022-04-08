@@ -21,6 +21,6 @@ export interface IReader {
     i(input: string): IReader;
 
     execute(): Promise<IMedia>;
-    
-    executeSync(): IMedia;
+
+    executeSync(): IMedia | null;
 }

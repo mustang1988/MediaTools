@@ -18,7 +18,7 @@ import { IMedia } from "../type/media/IMedia";
 export class Transcoder implements ITranscoder {
     _bin: string;
     _options: IOption<any>[];
-    _source_media?: IMedia;
+    _source_media?: IMedia | null;
     _limit_bit_rate: boolean;
 
     static H26X_OPTION_NAMES = ['-profile:v', '-preset'];

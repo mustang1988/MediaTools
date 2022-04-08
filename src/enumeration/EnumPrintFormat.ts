@@ -1,3 +1,4 @@
 export enum EnumPrintFormat {
-    JSON = "json"
+    JSON = "json=c=1",
+    XML="xml",
 }

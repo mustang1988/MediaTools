@@ -76,7 +76,6 @@ describe('VideoStream.ts', () => {
     it('getWidth()', () => {
         const video_stream = new VideoStream(normal_data);
         assert.notDeepEqual(video_stream, null);
-        console.log(video_stream)
         assert.deepEqual(video_stream.getWidth()?.getValue(), _.get(normal_data, 'width', null));
     });
     it('getWidth() not given', () => {

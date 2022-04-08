@@ -163,8 +163,6 @@ describe('AudioStream.ts', () => {
     it('isCodec(codec: string)', () => {
         const audio_stream = new AudioStream(normal_data);
         assert.notDeepEqual(audio_stream, null);
-        console.log(audio_stream)
-        console.log(audio_stream.isCodec('aac'));
         assert.deepEqual(audio_stream.isCodec('aac'), true);
     });
     it('isCodec(codec: string) false', () => {

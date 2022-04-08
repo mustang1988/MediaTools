@@ -74,7 +74,7 @@ export class Reader implements IReader {
 
     select_streams(selector: EnumSelectStream): IReader {
         return this.#setOption(OptionFactory.CreateEnumOption(
-            '-show_entries',
+            '-select_streams',
             selector,
             1
         ));
@@ -101,18 +101,21 @@ export class Reader implements IReader {
         });
     }
 
-    executeSync(): IMedia {
+    executeSync(): IMedia | null {
         const cmd = this.#buildCommand().join(' ');
-        // console.log('cmd =>> ', cmd);
-        const output = execSync(cmd).toString();
-        const metadata = JSON.parse(output);
-        return new Media(metadata);
+        try {
+            const output = execSync(cmd).toString();
+            const metadata = JSON.parse(output);
+            return new Media(metadata);
+        } catch (error) {
+            return null;
+        }
     }
 
     #setOption(option: IOption<any>): IReader {
-        if (!option.isMultiple()) {
-            _.remove(this._options, opt => opt.getName() === option.getName());
-        }
+        // if (!option.isMultiple()) {
+        //     _.remove(this._options, opt => opt.getName() === option.getName());
+        // }
         if (!_.isEmpty(option.getConflicts())) {
             _.remove(this._options, opt => option.getConflicts().includes(opt.getName()));
         }

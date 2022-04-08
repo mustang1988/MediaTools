@@ -2,7 +2,7 @@ import { IMedia } from "../type/media/IMedia";
 import { Reader } from "./Reader";
 
 export class ReaderFactory {
-    static ReadFromFileSync(file: string, bin?: string): IMedia {
+    static ReadFromFileSync(file: string, bin?: string): IMedia | null {
         return new Reader(bin)
             .v()
             .of()
