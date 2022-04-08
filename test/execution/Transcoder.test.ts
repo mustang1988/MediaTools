@@ -11,6 +11,7 @@ import { EnumH26XProfile } from '../../src/enumeration/EnumH26XProfile';
 import { EnumColorspace } from '../../src/enumeration/EnumColorspace';
 import path from 'path';
 import { existsSync, mkdirSync, readdirSync, rmdir, rmdirSync, unlinkSync } from 'fs';
+import { EnumLogLevel } from '../../src/enumeration/EnumLogLevel';
 
 const OUTPUT_DIR = path.join(__dirname, 'OUTPUT_DIR');
 describe('Transcoder.ts', () => {
@@ -31,6 +32,19 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder(bin);
         assert.notDeepEqual(transcoder, null);
         assert.deepEqual(transcoder.getBin(), bin);
+    });
+    it('v(level?: EnumLogLevel)', () => {
+        const reader = new Transcoder();
+        assert.notDeepEqual(reader, null);
+        const log_level = EnumLogLevel.ERROR;
+        reader.v(log_level);
+        assert.deepEqual(_.find(reader._options, opt => opt.getName() === '-v')?.getValue(), log_level);
+    });
+    it('v(level?: EnumLogLevel) by default', () => {
+        const reader = new Transcoder();
+        assert.notDeepEqual(reader, null);
+        reader.v();
+        assert.deepEqual(_.find(reader._options, opt => opt.getName() === '-v')?.getValue(), EnumLogLevel.PANIC);
     });
     it('i(input: string, source?: boolean, format?: string) input file', () => {
         const transcoder = new Transcoder();

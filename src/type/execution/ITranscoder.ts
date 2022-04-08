@@ -3,11 +3,14 @@ import { EnumConcatSafe } from "../../enumeration/EnumConcatSafe";
 import { EnumH26XPreset } from "../../enumeration/EnumH26XPreset";
 import { EnumH26XProfile } from "../../enumeration/EnumH26XProfile";
 import { EnumHLSSegmentType } from "../../enumeration/EnumHLSSegmentType";
+import { EnumLogLevel } from "../../enumeration/EnumLogLevel";
 import { EnumVPXDeadline } from "../../enumeration/EnumVPXDeadline";
 import { EnumVPXQuality } from "../../enumeration/EnumVPXQuality";
 
 export interface ITranscoder {
     getBin(): string;
+
+    v(level?: EnumLogLevel): ITranscoder;
 
     i(input: string, source?: boolean, format?: string): ITranscoder;
 

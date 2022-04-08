@@ -6,6 +6,7 @@ import { EnumConcatSafe } from "../enumeration/EnumConcatSafe";
 import { EnumH26XPreset } from "../enumeration/EnumH26XPreset";
 import { EnumH26XProfile } from "../enumeration/EnumH26XProfile";
 import { EnumHLSSegmentType } from "../enumeration/EnumHLSSegmentType";
+import { EnumLogLevel } from "../enumeration/EnumLogLevel";
 import { EnumVPXDeadline } from "../enumeration/EnumVPXDeadline";
 import { EnumVPXQuality } from "../enumeration/EnumVPXQuality";
 import { MediaParser } from "../media/MediaParser";
@@ -41,10 +42,21 @@ export class Transcoder implements ITranscoder {
         ];
         this._source_media = undefined;
         this._limit_bit_rate = false;
+        // auto set "-y" and "-v panic" options by default
+        this.y();
+        this.v();
     }
 
     getBin(): string {
         return this._bin;
+    }
+
+    v(level?: EnumLogLevel): ITranscoder {
+        return this.#setOption(OptionFactory.CreateEnumOption(
+            '-v',
+            _.isUndefined(level) ? EnumLogLevel.PANIC : level,
+            1
+        ));
     }
 
     i(input: string, source?: boolean, format?: string): ITranscoder {
