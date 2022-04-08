@@ -9,8 +9,14 @@ import { EnumVPXQuality } from '../../src/enumeration/EnumVPXQuality';
 import { EnumH26XPreset } from '../../src/enumeration/EnumH26XPreset';
 import { EnumH26XProfile } from '../../src/enumeration/EnumH26XProfile';
 import { EnumColorspace } from '../../src/enumeration/EnumColorspace';
+import path from 'path';
+import { existsSync, mkdirSync, readdirSync, rmdir, rmdirSync, unlinkSync } from 'fs';
 
+const OUTPUT_DIR = path.join(__dirname, 'OUTPUT_DIR');
 describe('Transcoder.ts', () => {
+    before(() => {
+        !existsSync(OUTPUT_DIR) && mkdirSync(OUTPUT_DIR);
+    });
     it('constructor()', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -560,7 +566,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         const input = 'E:\\视频文件\\HDR视频文件\\Swordsmith.mp4';
-        const output = 'a.mp4';
+        const output = path.join(OUTPUT_DIR, 'a.mp4');
         transcoder.i(input)
             .c_v('libx264')
             .output(output)
@@ -579,7 +585,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         const input = 'C:\\Users\\pgu.LANDHIGHTECH101\\Desktop\\绿幕测试视频\\test.mp4';
-        const output = 'a.mp4';
+        const output = path.join(OUTPUT_DIR, 'a.mp4');
         transcoder.i(input)
             .c_v('libx264')
             .y()
@@ -598,7 +604,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         const input = 'C:\\Users\\pgu.LANDHIGHTECH101\\Desktop\\绿幕测试视频\\test.mp4';
-        const output = 'a.mp4';
+        const output = path.join(OUTPUT_DIR, 'a.mp4');
         const res = transcoder.i(input)
             .c_v('libvpx-vp9')
             .y()
@@ -610,7 +616,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         const input = 'E:\\视频文件\\HDR视频文件\\a.mp4';
-        const output = 'a.mp4';
+        const output = path.join(OUTPUT_DIR, 'a.mp4');
         const res = transcoder.i(input)
             .c_v('libvpx-vp9')
             .b_V(10000)
@@ -618,5 +624,11 @@ describe('Transcoder.ts', () => {
             .output(output)
             .executeSync()
         assert.notDeepEqual(res, null);
+    });
+    after(() => {
+        for (const file of readdirSync(OUTPUT_DIR)) {
+            unlinkSync(path.join(OUTPUT_DIR, file));
+        }
+        rmdirSync(OUTPUT_DIR);
     });
 });
