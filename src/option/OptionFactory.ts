@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { RatioParser } from "../ratio/RatioParser";
-import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
 import { BooleanOption } from "./BooleanOption";
 import { EnumOption } from "./EnumOption";

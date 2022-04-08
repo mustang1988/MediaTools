@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { IRatio } from "../type/IRatio";
 import { Property } from "./Property";
 
