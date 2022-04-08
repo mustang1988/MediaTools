@@ -3,7 +3,7 @@ import { Ratio } from "./Ratio";
 
 export class RatioParser {
     static DEFAULT_SEPARATORS = ['/', ':', '.'];
-    
+
     static ParseFromString(string_ratio: string | null, separator?: string): Ratio | null {
         if (_.isNil(string_ratio)) {
             return null;

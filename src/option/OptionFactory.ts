@@ -62,13 +62,13 @@ export class OptionFactory {
         return new EnumOption(name, value, priority, multiple, conflicts);
     }
 
-    static CreateAudioBitRateLimitOption(media: IMedia | null | undefined): NumberOption | null {
+    static CreateAudioBitRateLimitOption(media?: IMedia | null): NumberOption | null {
         if (!_.isNil(media) && media.hasAudioStream()) {
             const channel_layout = media.getAudioStream()?.getChannelLayout()?.getValue();
             switch (channel_layout) {
                 case "mono":
                     return OptionFactory.CreateNumberOption('-b:a', 128000, 5.2);
-                case "stero":
+                case "stereo":
                     return OptionFactory.CreateNumberOption('-b:a', 384000, 5.2);
                 case "5.1":
                     return OptionFactory.CreateNumberOption('-b:a', 512000, 5.2);
@@ -80,7 +80,7 @@ export class OptionFactory {
     }
 
     static CreateVideoBitRateLimitOption(
-        media: IMedia | null | undefined,
+        media?: IMedia | null,
         target_frame_rate?: RatioOption
     ): NumberOption | null {
         if (!_.isNil(media) && media.hasVideoStream()) {
@@ -127,7 +127,7 @@ export class OptionFactory {
                         : is_hdr
                             ? 20
                             : 16;
-                } else if (size_key >= 2160) {
+                } else {
                     // 4k or higher
                     bit_rate = is_high_frame_rate
                         ? is_hdr
@@ -144,10 +144,10 @@ export class OptionFactory {
         return null;
     }
 
-    static CreateHDRToSDROption(media: IMedia | null | undefined): IOption<any>[] {
-        if (!_.isNil(media) && media.isHDR()) {
-            // TODO
-        }
-        return [];
-    }
+    // static CreateHDRToSDROption(media?: IMedia | null): IOption<any>[] {
+    //     if (!_.isNil(media) && media.isHDR()) {
+    //         // TODO
+    //     }
+    //     return [];
+    // }
 }
