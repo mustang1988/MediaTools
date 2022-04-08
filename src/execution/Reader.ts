@@ -20,6 +20,9 @@ export class Reader implements IReader {
             '',
             0
         )];
+        // auto set -v panic -of json by default
+        this.v();
+        this.of();
     }
 
     getBin(): string {
@@ -113,17 +116,16 @@ export class Reader implements IReader {
     }
 
     #setOption(option: IOption<any>): IReader {
-        // if (!option.isMultiple()) {
-        //     _.remove(this._options, opt => opt.getName() === option.getName());
-        // }
-        if (!_.isEmpty(option.getConflicts())) {
-            _.remove(this._options, opt => option.getConflicts().includes(opt.getName()));
-        }
+        // for no multiple option, remove exists
+        !option.isMultiple() && _.remove(this._options, opt => opt.getName() === option.getName());
+        // for option with conflicts, remove its conflicts
+        !_.isEmpty(option.getConflicts()) && _.remove(this._options, opt => option.getConflicts().includes(opt.getName()));
         this._options.push(option);
         return this;
     }
 
     #buildCommand(): string[] {
+        // this.#autoSetOptions();
         this._options.sort((o1, o2) => o1.getPriority() - o2.getPriority());
         const args: string[] = [];
         for (const opt of this._options) {
@@ -131,4 +133,9 @@ export class Reader implements IReader {
         }
         return args;
     }
+
+    // #autoSetOptions(): void {
+    //     _.find(this._options, opt => opt.getName() === '-v') || this.v();
+    //     _.find(this._options, opt => opt.getName() === '-of') || this.of();
+    // }
 }
