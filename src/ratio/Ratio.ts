@@ -1,4 +1,5 @@
 import _ = require("lodash");
+import { RATIO_SEPERATOR_SLASH } from "../type/Constants";
 import { IRatio } from "../type/IRatio";
 
 export class Ratio implements IRatio {
@@ -9,7 +10,7 @@ export class Ratio implements IRatio {
     constructor(dividend: number, divisor: number, separator?: string) {
         this._dividend = dividend;
         this._divisor = divisor;
-        this._separator = _.isUndefined(separator) ? '/' : separator;
+        this._separator = _.isUndefined(separator) ? RATIO_SEPERATOR_SLASH : separator;
     }
 
     toNumber(fix?: number): number {

@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import assert from 'assert';
 import { NumberOption } from '../../src/option/NumberOption';
+import { COMMAND_SEPERATOR } from '../../src/type/Constants';
 
 describe('NumberOption.ts', () => {
     it('constructor() with default args', () => {
@@ -34,7 +35,7 @@ describe('NumberOption.ts', () => {
         const value = 4;
         const option = new NumberOption(name, value);
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), `${name} ${value}`);
+        assert.deepEqual(option.toString(), `${name}${COMMAND_SEPERATOR}${value}`);
     });
 
     it('toString() validate false', () => {
@@ -42,6 +43,6 @@ describe('NumberOption.ts', () => {
         const value = 4;
         const option = new NumberOption(name, value, 1, false, [], 0, 3);
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), '');
+        assert.deepEqual(option.toString(), "");
     });
 });

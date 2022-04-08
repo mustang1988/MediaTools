@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import assert from 'assert';
 import { StringOption } from '../../src/option/StringOption';
+import { COMMAND_SEPERATOR } from '../../src/type/Constants';
 
 describe('StringOption.ts', () => {
     it('constructor() with default args', () => {
@@ -32,12 +33,12 @@ describe('StringOption.ts', () => {
         const value = "test";
         const option = new StringOption(name, value);
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), `${name} ${value}`);
+        assert.deepEqual(option.toString(), `${name}${COMMAND_SEPERATOR}${value}`);
     });
 
     it('toString() validate failed', () => {
         const option = new StringOption("name");
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), '');
+        assert.deepEqual(option.toString(), "");
     });
 });

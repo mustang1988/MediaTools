@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { COMMAND_SEPERATOR } from "../type/Constrants";
+import { COMMAND_SEPERATOR } from "../type/Constants";
 import { IOption } from "../type/IOption";
 
 export abstract class Option<T> implements IOption<T>{

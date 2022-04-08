@@ -2,6 +2,7 @@ import { describe, it } from 'mocha';
 import assert from 'assert';
 import { EnumOption } from '../../src/option/EnumOption';
 import { EnumVPXQuality } from '../../src/enumeration/EnumVPXQuality';
+import { COMMAND_SEPERATOR } from '../../src/type/Constants';
 
 describe('EnumOption.ts', () => {
     it('constructor() with default args', () => {
@@ -28,6 +29,6 @@ describe('EnumOption.ts', () => {
         const value = EnumVPXQuality.BEST;
         const option = new EnumOption(name, value);
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), `${name} ${value}`);
+        assert.deepEqual(option.toString(), `${name}${COMMAND_SEPERATOR}${value}`);
     });
 });

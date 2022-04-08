@@ -5,7 +5,7 @@ import { EnumPrintFormat } from "../enumeration/EnumPrintFormat";
 import { EnumSelectStream } from "../enumeration/EnumSelectStream";
 import { Media } from "../media/Media";
 import { OptionFactory } from "../option/OptionFactory";
-import { COMMAND_SEPERATOR } from "../type/Constrants";
+import { COMMAND_SEPERATOR } from "../type/Constants";
 import { IReader } from "../type/execution/IReader";
 import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
@@ -18,7 +18,7 @@ export class Reader implements IReader {
         this._bin = _.isUndefined(bin) ? 'ffprobe' : bin;
         this._options = [OptionFactory.CreateStringOption(
             this._bin,
-            '',
+            "",
             0
         )];
         // auto set "-v panic" and  "-of json=c=1" by default

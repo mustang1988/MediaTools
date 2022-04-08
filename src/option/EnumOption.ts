@@ -1,3 +1,4 @@
+import { COMMAND_SEPERATOR } from "../type/Constants";
 import { Option } from "./Option";
 
 export class EnumOption<T> extends Option<T>{
@@ -8,8 +9,8 @@ export class EnumOption<T> extends Option<T>{
     validate(): boolean {
         return true;
     }
-    
+
     toString(): string {
-        return `${this._name} ${this._value}`;
+        return `${this._name}${COMMAND_SEPERATOR}${this._value}`;
     }
 }

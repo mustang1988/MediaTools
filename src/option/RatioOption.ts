@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { COMMAND_SEPERATOR } from "../type/Constants";
 import { IRatio } from "../type/IRatio";
 import { Option } from "./Option";
 
@@ -12,6 +13,8 @@ export class RatioOption extends Option<IRatio> {
     }
 
     toString(): string {
-        return this.validate() ? `${this._name} ${this._value?.toString()}` : '';
+        return this.validate()
+            ? `${this._name}${COMMAND_SEPERATOR}${this._value?.toString()}`
+            : "";
     }
 }

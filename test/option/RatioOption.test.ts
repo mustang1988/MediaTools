@@ -2,6 +2,7 @@ import { describe, it } from 'mocha';
 import assert from 'assert';
 import { RatioOption } from '../../src/option/RatioOption';
 import { Ratio } from '../../src/ratio/Ratio';
+import { COMMAND_SEPERATOR } from '../../src/type/Constants';
 
 describe('RatioOption.ts', () => {
     it('constructor() with default args', () => {
@@ -34,12 +35,12 @@ describe('RatioOption.ts', () => {
         const value = new Ratio(0, 0);
         const option = new RatioOption(name, value);
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), `${name} ${value}`);
+        assert.deepEqual(option.toString(), `${name}${COMMAND_SEPERATOR}${value}`);
     });
 
     it('toString() validate failed', () => {
         const option = new RatioOption("name");
         assert.notDeepEqual(option, null);
-        assert.deepEqual(option.toString(), '');
+        assert.deepEqual(option.toString(), "");
     });
 });

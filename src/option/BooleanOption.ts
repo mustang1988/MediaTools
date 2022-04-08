@@ -14,6 +14,6 @@ export class BooleanOption extends Option<boolean>{
     toString(): string {
         return this._value
             ? this._name
-            : '';
+            :"";
     }
 }

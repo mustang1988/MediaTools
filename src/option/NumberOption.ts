@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { COMMAND_SEPERATOR } from "../type/Constants";
 import { Option } from "./Option";
 
 export class NumberOption extends Option<number>{
@@ -16,6 +17,8 @@ export class NumberOption extends Option<number>{
     }
 
     toString(): string {
-        return this.validate() ? `${this._name} ${this._value}` : "";
+        return this.validate()
+            ? `${this._name}${COMMAND_SEPERATOR}${this._value}`
+            : "";
     }
 }

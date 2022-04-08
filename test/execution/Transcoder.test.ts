@@ -149,7 +149,7 @@ describe('Transcoder.ts', () => {
         assert.notDeepEqual(transcoder, null);
         const output = 'E:\\视频文件\\HDR视频文件\\Swordsmith.mp4';
         transcoder.output(output);
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '')?.getValue(), output);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === "")?.getValue(), output);
     });
     it('y(confirm?: boolean)', () => {
         const transcoder = new Transcoder();

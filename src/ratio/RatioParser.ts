@@ -1,16 +1,17 @@
 import _ from 'lodash';
+import { DEFAULT_SUPPORTED_SEPARATORS } from '../type/Constants';
 import { Ratio } from "./Ratio";
 
 export class RatioParser {
-    static DEFAULT_SEPARATORS = ['/', ':', '.'];
 
     static ParseFromString(string_ratio: string | null, separator?: string): Ratio | null {
         if (_.isNil(string_ratio)) {
             return null;
         }
         if (_.isUndefined(separator)) {
-            for (const def_sep of RatioParser.DEFAULT_SEPARATORS) {
-                const result = RatioParser.ParseFromString(string_ratio, def_sep);
+            // try all supported separators, if parse result is not null, then return it
+            for (const sep of DEFAULT_SUPPORTED_SEPARATORS) {
+                const result = RatioParser.ParseFromString(string_ratio, sep);
                 if (!_.isNull(result)) {
                     return result;
                 }

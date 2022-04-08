@@ -12,7 +12,7 @@ import { EnumVPXQuality } from "../enumeration/EnumVPXQuality";
 import { MediaParser } from "../media/MediaParser";
 import { OptionFactory } from "../option/OptionFactory";
 import { RatioOption } from "../option/RatioOption";
-import { COMMAND_SEPERATOR } from "../type/Constrants";
+import { COMMAND_SEPERATOR } from "../type/Constants";
 import { ITranscoder } from "../type/execution/ITranscoder";
 import { IOption } from "../type/IOption";
 import { IMedia } from "../type/media/IMedia";
@@ -38,7 +38,7 @@ export class Transcoder implements ITranscoder {
     constructor(bin?: string) {
         this._bin = _.isUndefined(bin) ? 'ffmpeg' : bin;
         this._options = [
-            OptionFactory.CreateStringOption(this._bin, '', 0),
+            OptionFactory.CreateStringOption(this._bin, "", 0),
         ];
         this._source_media = undefined;
         this._limit_bit_rate = false;
@@ -109,7 +109,7 @@ export class Transcoder implements ITranscoder {
     }
 
     output(output: string): ITranscoder {
-        return this.#setOption(OptionFactory.CreateStringOption('', output, 9.1));
+        return this.#setOption(OptionFactory.CreateStringOption("", output, 9.1));
     }
 
     y(confirm = true): ITranscoder {
@@ -353,8 +353,7 @@ export class Transcoder implements ITranscoder {
         for (const opt of this._options) {
             args.push(...opt.toArray());
         }
-        _.remove(args, arg => arg === '');
-        return args;
+        return _.compact(args);
     }
 
     #autoLimitBitRate(): void {
