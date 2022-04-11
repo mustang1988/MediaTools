@@ -531,7 +531,7 @@ export class Transcoder implements ITranscoder {
     checkBin(): boolean {
         const check_cmd = `${this._bin} -version`;
         try {
-            execSync(check_cmd);
+            /* const stdout = */execSync(check_cmd).toString();
             return true;
         } catch (error) {
             return false;

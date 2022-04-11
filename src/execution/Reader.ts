@@ -146,11 +146,8 @@ export class Reader implements IReader {
     execute(): Promise<IMedia> {
         const cmd = this.#buildCommand().join(COMMAND_SEPERATOR);
         return new Promise((resolve, reject) => {
-            // console.log('In Promise =>> ', this.checkBin());
             if (this.checkBin()) {
-                // console.log(cmd);
                 exec(cmd, (error, stdout) => {
-                    // console.error('In Callback =>> ', error);
                     if (!_.isNil(error)) {
                         reject(error)
                     }
@@ -171,7 +168,6 @@ export class Reader implements IReader {
         const cmd = this.#buildCommand().join(COMMAND_SEPERATOR);
         try {
             if (this.checkBin()) {
-                // console.log(cmd);
                 const output = execSync(cmd).toString();
                 const metadata = JSON.parse(output);
                 return new Media(metadata);
@@ -185,11 +181,9 @@ export class Reader implements IReader {
     checkBin(): boolean {
         const check_cmd = `${this._bin} -version`;
         try {
-            const check_res = execSync(check_cmd);
-            // console.log(check_res.toString());
+            /* const stdout = */execSync(check_cmd).toString();
             return true;
         } catch (error) {
-            console.log(error);
             return false;
         }
     }

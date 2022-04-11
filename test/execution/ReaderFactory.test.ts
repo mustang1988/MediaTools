@@ -32,7 +32,6 @@ describe('ReaderFactory.ts', () => {
                 done();
             })
             .catch(error => {
-                console.log(error)
                 done();
             })
     });
@@ -45,7 +44,6 @@ describe('ReaderFactory.ts', () => {
                 done();
             })
             .catch(error => {
-                console.log(error)
                 done();
             })
     });
