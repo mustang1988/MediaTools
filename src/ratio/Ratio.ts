@@ -20,7 +20,7 @@ export class Ratio implements IRatio {
      * @returns {number}
      */
     toNumber(fix?: number): number {
-        if (!this.isValid()) {
+        if (this._divisor === 0) {
             return 0;
         }
         const result = this._dividend / this._divisor;

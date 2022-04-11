@@ -2,7 +2,6 @@ import { describe, it } from 'mocha';
 import assert from 'assert';
 import { Transcoder } from '../../src/execution/Transcoder';
 import _ from 'lodash';
-import { EnumConcatSafe } from '../../src/enumeration/EnumConcatSafe';
 import { EnumHLSSegmentType } from '../../src/enumeration/EnumHLSSegmentType';
 import { EnumVPXDeadline } from '../../src/enumeration/EnumVPXDeadline';
 import { EnumVPXQuality } from '../../src/enumeration/EnumVPXQuality';
@@ -184,18 +183,25 @@ describe('Transcoder.ts', () => {
         transcoder.vf(filter);
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-vf')?.getValue(), filter);
     });
-    it('safe(safe?: EnumConcatSafe)', () => {
+    it('safe(safe?: boolean)', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
-        const safe = EnumConcatSafe.SAFE;
+        const safe = true;
         transcoder.safe(safe);
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-safe')?.getValue(), safe);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-safe')?.getValue(), "1");
     });
-    it('safe(safe?: EnumConcatSafe) by default', () => {
+    it('safe(safe?: boolean) by default', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         transcoder.safe();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-safe')?.getValue(), EnumConcatSafe.UNSAFE);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-safe')?.getValue(), "0");
+    });
+    it('safe(safe?: boolean) false', () => {
+        const transcoder = new Transcoder();
+        assert.notDeepEqual(transcoder, null);
+        const safe = false;
+        transcoder.safe(safe);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-safe')?.getValue(), "0");
     });
     it('dn(confirm?: boolean)', () => {
         const transcoder = new Transcoder();
@@ -282,12 +288,6 @@ describe('Transcoder.ts', () => {
         transcoder.c_v('libvpx-vp9').cpu_used();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-cpu-used')?.getValue(), 1);
     });
-    it('cpu_used(cpu_used?: number) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.cpu_used();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-cpu-used'), undefined);
-    });
     it('deadline(deadline?: EnumVPXDeadline)', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -300,12 +300,6 @@ describe('Transcoder.ts', () => {
         assert.notDeepEqual(transcoder, null);
         transcoder.c_v('libvpx-vp9').deadline();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-deadline')?.getValue(), EnumVPXDeadline.REALTIME);
-    });
-    it('deadline(deadline?: EnumVPXDeadline) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.deadline();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-deadline'), undefined);
     });
     it('frame_parallel(enable?: boolean)', () => {
         const transcoder = new Transcoder();
@@ -327,12 +321,6 @@ describe('Transcoder.ts', () => {
         transcoder.c_v('libvpx-vp9').frame_parallel();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-frame-parallel')?.getValue(), "1");
     });
-    it('frame_parallel(enable?: boolean) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.frame_parallel();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-frame-parallel'), undefined);
-    });
     it('level(level?: number)', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -344,13 +332,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         transcoder.c_v('libvpx-vp9').level();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-level')?.getValue(), 6.2);
-    });
-    it('level(level?: number) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.level();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-level'), undefined);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-level')?.getValue(), -1);
     });
     it('quality(quality?: EnumVPXQuality)', () => {
         const transcoder = new Transcoder();
@@ -364,12 +346,6 @@ describe('Transcoder.ts', () => {
         assert.notDeepEqual(transcoder, null);
         transcoder.c_v('libvpx-vp9').quality();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-quality')?.getValue(), EnumVPXQuality.REALTIME);
-    });
-    it('quality(quality?: EnumVPXQuality) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.quality();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-quality'), undefined);
     });
     it('row_mt(enable?: boolean)', () => {
         const transcoder = new Transcoder();
@@ -391,12 +367,6 @@ describe('Transcoder.ts', () => {
         transcoder.c_v('libvpx-vp9').row_mt();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-row-mt')?.getValue(), "1");
     });
-    it('row_mt(enable?: boolean) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.row_mt();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-row-mt'), undefined);
-    });
     it('speed(speed?: number)', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -409,12 +379,6 @@ describe('Transcoder.ts', () => {
         assert.notDeepEqual(transcoder, null);
         transcoder.c_v('libvpx-vp9').speed();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-speed')?.getValue(), 1);
-    });
-    it('speed(speed?: number) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.speed();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-speed'), undefined);
     });
     it('tile_columns(columns?: number)', () => {
         const transcoder = new Transcoder();
@@ -429,12 +393,6 @@ describe('Transcoder.ts', () => {
         transcoder.c_v('libvpx-vp9').tile_columns();
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-tile-columns')?.getValue(), 1);
     });
-    it('tile_columns(columns?: number) not vpx codec', () => {
-        const transcoder = new Transcoder();
-        assert.notDeepEqual(transcoder, null);
-        transcoder.tile_columns();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-tile-columns'), undefined);
-    });
     it('preset(preset: EnumH26XPreset)', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -446,7 +404,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         transcoder.preset(EnumH26XPreset.ULTRAFAST);
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-preset'), undefined);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-preset')?.getValue(), EnumH26XPreset.ULTRAFAST);
     });
     it('profile(profile: EnumH26XProfile)', () => {
         const transcoder = new Transcoder();
@@ -459,7 +417,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         transcoder.profile(EnumH26XProfile.MAIN);
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-profile:v'), undefined);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-profile:v')?.getValue(), EnumH26XProfile.MAIN);
     });
     it('color_primaries(color_primaries: number)', () => {
         const transcoder = new Transcoder();
