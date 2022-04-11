@@ -20,7 +20,7 @@ export class Ratio implements IRatio {
      * @returns {number}
      */
     toNumber(fix?: number): number {
-        if (this._divisor === 0) {
+        if (!this.isValid()) {
             return 0;
         }
         const result = this._dividend / this._divisor;
@@ -34,7 +34,9 @@ export class Ratio implements IRatio {
      * @returns {string}
      */
     toString(): string {
-        return `${this._dividend}${this._separator}${this._divisor}`;
+        return this.isValid()
+            ? `${this._dividend}${this._separator}${this._divisor}`
+            : "";
     }
 
     /**
@@ -44,5 +46,14 @@ export class Ratio implements IRatio {
      */
     isGreaterThan(num: number): boolean {
         return this.toNumber() > num;
+    }
+
+    /**
+     * Check the ratio object is a valid ratio.
+     * Infinite or negative value is considered invalid
+     * @returns {boolean}
+     */
+    isValid() {
+        return this._divisor != 0 && this.toNumber() >= 0;
     }
 }

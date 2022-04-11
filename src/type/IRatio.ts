@@ -4,4 +4,6 @@ export interface IRatio {
     toString(): string;
 
     isGreaterThan(num: number): boolean;
+
+    isValid(): boolean;
 }
