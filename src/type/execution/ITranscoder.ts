@@ -5,8 +5,9 @@ import { EnumHLSSegmentType } from "../../enumeration/EnumHLSSegmentType";
 import { EnumLogLevel } from "../../enumeration/EnumLogLevel";
 import { EnumVPXDeadline } from "../../enumeration/EnumVPXDeadline";
 import { EnumVPXQuality } from "../../enumeration/EnumVPXQuality";
+import { IExecutable } from "./IExecutable";
 
-export interface ITranscoder {
+export interface ITranscoder extends IExecutable<string> {
     getBin(): string;
 
     v(level?: EnumLogLevel): ITranscoder;

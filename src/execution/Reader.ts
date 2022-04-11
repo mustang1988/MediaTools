@@ -1,5 +1,6 @@
 import { exec, execSync } from "child_process";
 import _ from "lodash";
+import { isConstructorTypeNode } from "typescript";
 import { EnumLogLevel } from "../enumeration/EnumLogLevel";
 import { EnumPrintFormat } from "../enumeration/EnumPrintFormat";
 import { EnumSelectStream } from "../enumeration/EnumSelectStream";
@@ -99,7 +100,7 @@ export class Reader implements IReader {
      * Set show entries option in ffprobe.
      * It's conflict with show_streams and show_format options.
      * @param entries {string} show entries
-     * @see https://ffmpeg.org/ffprobe.html#show-entries
+     * @link https://ffmpeg.org/ffprobe.html#show-entries
      * @returns {IReader}
      */
     show_entries(entries: string): IReader {
@@ -145,13 +146,20 @@ export class Reader implements IReader {
     execute(): Promise<IMedia> {
         const cmd = this.#buildCommand().join(COMMAND_SEPERATOR);
         return new Promise((resolve, reject) => {
-            exec(cmd, (error, stdout) => {
-                if (!_.isNil(error)) {
-                    reject(error)
-                }
-                const metadata = JSON.parse(stdout.toString());
-                resolve(new Media(metadata))
-            })
+            // console.log('In Promise =>> ', this.checkBin());
+            if (this.checkBin()) {
+                // console.log(cmd);
+                exec(cmd, (error, stdout) => {
+                    // console.error('In Callback =>> ', error);
+                    if (!_.isNil(error)) {
+                        reject(error)
+                    }
+                    const metadata = JSON.parse(stdout.toString());
+                    resolve(new Media(metadata))
+                })
+            } else {
+                reject(new Error(`ffprobe not found:${this._bin}`));
+            }
         });
     }
 
@@ -162,11 +170,27 @@ export class Reader implements IReader {
     executeSync(): IMedia | null {
         const cmd = this.#buildCommand().join(COMMAND_SEPERATOR);
         try {
-            const output = execSync(cmd).toString();
-            const metadata = JSON.parse(output);
-            return new Media(metadata);
+            if (this.checkBin()) {
+                // console.log(cmd);
+                const output = execSync(cmd).toString();
+                const metadata = JSON.parse(output);
+                return new Media(metadata);
+            }
+            throw new Error(`ffprobe not found:${this._bin}`);
         } catch (error) {
             return null;
+        }
+    }
+
+    checkBin(): boolean {
+        const check_cmd = `${this._bin} -version`;
+        try {
+            const check_res = execSync(check_cmd);
+            // console.log(check_res.toString());
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
         }
     }
 

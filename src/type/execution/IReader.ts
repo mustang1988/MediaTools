@@ -2,8 +2,9 @@ import { EnumLogLevel } from "../../enumeration/EnumLogLevel";
 import { EnumPrintFormat } from '../../enumeration/EnumPrintFormat';
 import { EnumSelectStream } from "../../enumeration/EnumSelectStream";
 import { IMedia } from "../media/IMedia";
+import { IExecutable } from "./IExecutable";
 
-export interface IReader {
+export interface IReader extends IExecutable<IMedia>{
     getBin(): string;
 
     v(level?: EnumLogLevel): IReader;

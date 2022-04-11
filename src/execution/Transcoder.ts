@@ -208,7 +208,7 @@ export class Transcoder implements ITranscoder {
     /**
      * Set video filter.
      * @param filter {string} video filter string
-     * @see https://ffmpeg.org/ffmpeg-all.html#toc-Filtering
+     * @link https://ffmpeg.org/ffmpeg-all.html#toc-Filtering
      * @returns {ITranscoder}
      */
     vf(filter: string): ITranscoder {
@@ -500,18 +500,25 @@ export class Transcoder implements ITranscoder {
         const command = this.#buildCommand().join(COMMAND_SEPERATOR);
         return new Promise((resolve, reject) => {
             exec(command, (error, stdout) => {
-                if (!_.isNil(error)) {
-                    reject(error);
+                if (this.checkBin()) {
+                    if (!_.isNil(error)) {
+                        reject(error);
+                    }
+                    resolve(stdout.toString())
+                } else {
+                    reject(new Error(`ffmpeg not found: ${this._bin}`));
                 }
-                resolve(stdout.toString())
             })
         });
     }
 
     executeSync(): string {
         try {
-            const command = this.#buildCommand().join(COMMAND_SEPERATOR);
-            return execSync(command).toString();
+            if (this.checkBin()) {
+                const command = this.#buildCommand().join(COMMAND_SEPERATOR);
+                return execSync(command).toString();
+            }
+            throw new Error(`ffmpeg not found: ${this._bin}`);
         } catch (error) {
             return (<Error>error).message;
         }
@@ -519,6 +526,16 @@ export class Transcoder implements ITranscoder {
 
     isBitRateLimit(): boolean {
         return this._limit_bit_rate;
+    }
+
+    checkBin(): boolean {
+        const check_cmd = `${this._bin} -version`;
+        try {
+            execSync(check_cmd);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
     #setOption(option: IOption<any>): ITranscoder {

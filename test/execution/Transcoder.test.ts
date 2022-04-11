@@ -572,6 +572,27 @@ describe('Transcoder.ts', () => {
                 done();
             })
     });
+
+    it('execute() failed caused by invalid bin', (done) => {
+        const transcoder = new Transcoder('');
+        assert.notDeepEqual(transcoder, null);
+        const input = 'C:\\Users\\pgu.LANDHIGHTECH101\\Desktop\\绿幕测试视频\\test.mp4';
+        const output = path.join(OUTPUT_DIR, 'a.mp4');
+        transcoder.i(input)
+            .c_v('libx264')
+            .y()
+            .output(output)
+            .execute()
+            .then(res => {
+                assert.deepEqual(res, null);
+                done();
+            })
+            .catch(err => {
+                assert.notDeepEqual(err, null);
+                done();
+            })
+    });
+
     it('executeSync()', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -596,6 +617,24 @@ describe('Transcoder.ts', () => {
             .output(output)
             .executeSync()
         assert.notDeepEqual(res, null);
+    });
+
+    it('executeSync() failed caused by invalid bin', () => {
+        const transcoder = new Transcoder('');
+        assert.notDeepEqual(transcoder, null);
+        const input = 'E:\\视频文件\\HDR视频文件\\a.mp4';
+        const output = path.join(OUTPUT_DIR, 'a.mp4');
+        try {
+            const res = transcoder.i(input)
+                .c_v('libvpx-vp9')
+                .b_V(10000)
+                .y()
+                .output(output)
+                .executeSync()
+            assert.deepEqual(res, undefined);
+        } catch (error) {
+            assert.notDeepEqual(error, null);
+        }
     });
     after(() => {
         for (const file of readdirSync(OUTPUT_DIR)) {

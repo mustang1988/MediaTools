@@ -19,11 +19,20 @@ describe('ReaderFactory.ts', () => {
         assert.deepEqual(media instanceof Media, true);
     });
 
+    it('static ReadFromFileSync() with invalid bin', () => {
+        const media = ReaderFactory.ReadFromFileSync(input, '');
+        assert.deepEqual(media, null);
+    });
+
     it('static ReadFromFile()', (done) => {
         ReaderFactory.ReadFromFile(input)
             .then(media => {
                 assert.notDeepEqual(media, null);
                 assert.deepEqual(media instanceof Media, true);
+                done();
+            })
+            .catch(error => {
+                console.log(error)
                 done();
             })
     });
@@ -33,6 +42,23 @@ describe('ReaderFactory.ts', () => {
             .then(media => {
                 assert.notDeepEqual(media, null);
                 assert.deepEqual(media instanceof Media, true);
+                done();
+            })
+            .catch(error => {
+                console.log(error)
+                done();
+            })
+    });
+
+    it('static ReadFromFile() with invalid bin', (done) => {
+        ReaderFactory.ReadFromFile(input, '')
+            .then(media => {
+                assert.notDeepEqual(media, null);
+                assert.deepEqual(media instanceof Media, true);
+                done();
+            })
+            .catch(error => {
+                assert.notDeepEqual(error, null);
                 done();
             })
     });
