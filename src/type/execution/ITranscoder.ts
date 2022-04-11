@@ -1,5 +1,4 @@
 import { EnumColorspace } from "../../enumeration/EnumColorspace";
-import { EnumConcatSafe } from "../../enumeration/EnumConcatSafe";
 import { EnumH26XPreset } from "../../enumeration/EnumH26XPreset";
 import { EnumH26XProfile } from "../../enumeration/EnumH26XProfile";
 import { EnumHLSSegmentType } from "../../enumeration/EnumHLSSegmentType";
@@ -40,7 +39,7 @@ export interface ITranscoder {
 
     vf(filter: string): ITranscoder;
 
-    safe(safe?: EnumConcatSafe): ITranscoder;
+    safe(safe?: boolean): ITranscoder;
 
     dn(confirm?: boolean): ITranscoder;
 

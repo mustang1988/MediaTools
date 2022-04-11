@@ -2,7 +2,6 @@ import { exec, execSync } from "child_process";
 import { existsSync } from "fs";
 import _ from "lodash";
 import { EnumColorspace } from "../enumeration/EnumColorspace";
-import { EnumConcatSafe } from "../enumeration/EnumConcatSafe";
 import { EnumH26XPreset } from "../enumeration/EnumH26XPreset";
 import { EnumH26XProfile } from "../enumeration/EnumH26XProfile";
 import { EnumHLSSegmentType } from "../enumeration/EnumHLSSegmentType";
@@ -34,7 +33,6 @@ export class Transcoder implements ITranscoder {
         '-b:a', '-c:a', '-channel_layout', '-ar'
     ];
 
-
     constructor(bin?: string) {
         this._bin = _.isUndefined(bin) ? 'ffmpeg' : bin;
         this._options = [
@@ -47,10 +45,19 @@ export class Transcoder implements ITranscoder {
         this.v();
     }
 
+    /**
+     * Get ffmpeg binary path.
+     * @returns {string}
+     */
     getBin(): string {
         return this._bin;
     }
 
+    /**
+     * Set ffmpeg log level.
+     * @param level {EnumLogLevel} ffmpeg log level.
+     * @returns {ITranscoder}
+     */
     v(level?: EnumLogLevel): ITranscoder {
         return this.#setOption(OptionFactory.CreateEnumOption(
             '-v',
@@ -59,6 +66,13 @@ export class Transcoder implements ITranscoder {
         ));
     }
 
+    /**
+     * Set input file or source.
+     * @param input {string} input file path or source
+     * @param source {boolean} is input a source or not
+     * @param format {string} input source format
+     * @returns {ITranscoder}
+     */
     i(input: string, source?: boolean, format?: string): ITranscoder {
         if (!_.isUndefined(source) && source && !_.isUndefined(format) && !_.isEmpty(format)) {
             this.#setOption(OptionFactory.CreateStringOption('-i', input, 2.1));
@@ -71,117 +85,275 @@ export class Transcoder implements ITranscoder {
         return this;
     }
 
+    /**
+     * Set output audio bit rate.
+     * @param bit_rate {number} audio bit rate
+     * @returns {ITranscoder}
+     */
     b_a(bit_rate: number): ITranscoder {
         this._limit_bit_rate = true;
         return this.#setOption(OptionFactory.CreateNumberOption('-b:a', bit_rate, 5.2));
     }
 
+    /**
+     * Set audio codec.
+     * @param codec {string} audio codec
+     * @returns {ITranscoder}
+     */
     c_a(codec: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('-c:a', codec, 5));
     }
 
+    /**
+     * Set audio channel layout.
+     * @param layout {string} audio channel layout.
+     * @returns {ITranscoder}
+     */
     channel_layout(layout: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('-channel_layout', layout, 5.3));
     }
 
+    /**
+     * Set no audio output.
+     * @param confirm {boolean} confirm no output audio
+     * @returns {ITranscoder}
+     */
     an(confirm?: boolean): ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-an', confirm, 5.3, false, Transcoder.AUDIO_OPTION_NAMES));
     }
 
+    /**
+     * Set output audio sample rate.
+     * @param sample_rate {number} audio sample rate
+     * @returns {ITranscoder}
+     */
     ar(sample_rate: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-ar', sample_rate, 5.1));
     }
 
+    /**
+     * Set output duration time.
+     * @param time {string} time
+     * @returns {ITranscoder}
+     */
     t(time: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-t', time, 1.2));
     }
 
+    /**
+     * Set start time offset for input.
+     * @param start {string} start time
+     * @returns {ITranscoder}
+     */
     ss(start?: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-ss', _.isUndefined(start) ? 0 : start, 1));
     }
 
+    /**
+     * Set to time offset for input.
+     * @param to {string} to time
+     * @returns {ITranscoder}
+     */
     to(to: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-to', to, 1.1));
     }
 
+    /**
+     * Set output format.
+     * @param format {string} output format
+     * @returns {ITranscoder}
+     */
     f(format: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('-f', format, 9));
     }
 
+    /**
+     * Set output file path.
+     * @param output {string} output file path.
+     * @returns {ITranscoder}
+     */
     output(output: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption("", output, 9.1));
     }
 
+    /**
+     * Set overwrite output file.
+     * @param confirm {boolean} confirm overwrite output file.
+     * @returns {ITranscoder}
+     */
     y(confirm = true): ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-y', confirm, 8));
     }
 
+    /**
+     * Set threads used for ffmpeg, from 0~Max int
+     * @param threads {number} threads to use
+     * @returns {ITranscoder}
+     */
     threads(threads?: number): ITranscoder {
-        return this.#setOption(OptionFactory.CreateNumberOption('-threads', _.isNil(threads) ? 1 : threads, 8));
+        threads = _.isNil(threads)
+            ? 1
+            : threads
+        return this.#setOption(OptionFactory.CreateNumberOption(
+            '-threads',
+            threads,
+            8,
+            false,
+            [],
+            0,
+            Number.MAX_SAFE_INTEGER
+        ));
     }
 
+    /**
+     * Set video filter.
+     * @param filter {string} video filter string
+     * @see https://ffmpeg.org/ffmpeg-all.html#toc-Filtering
+     * @returns {ITranscoder}
+     */
     vf(filter: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('-vf', filter, 3));
     }
 
-    safe(safe?: EnumConcatSafe): ITranscoder {
-        return this.#setOption(OptionFactory.CreateEnumOption('-safe', _.isNil(safe) ? EnumConcatSafe.UNSAFE : safe, 3));
+    /**
+     * Set concat safe option.
+     * @param safe {boolean} is safe concat
+     * @returns {ITranscoder}
+     */
+    safe(safe?: boolean): ITranscoder {
+        return this.#setOption(OptionFactory.CreateStringOption('-safe', _.isNil(safe) ? "0" : safe ? "1" : "0", 3));
     }
 
+    /**
+     * Set no data output.
+     * @param confirm {boolean} confirm no output data
+     * @returns {ITranscoder}
+     */
     dn(confirm?: boolean): ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-dn', confirm, 6));
     }
 
+    /**
+     * Set hls list file size.
+     * @param size {number} hls file list size
+     * @returns {ITranscoder}
+     */
     hls_list_size(size?: number): ITranscoder {
-        return this.#setOption(OptionFactory.CreateNumberOption('-hls_list_size', _.isNil(size) ? 0 : size, 7.1));
+        size = _.isNil(size) ? 0 : size;
+        return this.#setOption(OptionFactory.CreateNumberOption('-hls_list_size', size, 7.1));
     }
 
+    /**
+     * Set hls output segment filename
+     * @param filename {string} filename
+     * @returns {ITranscoder}
+     */
     hls_segment_filename(filename: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('-hls_segment_filename', filename, 7.3));
     }
 
+    /**
+     * Set hls output segment file type.
+     * @param type {EnumHLSSegmentType} hls segment file type.
+     * @returns {ITranscoder}
+     */
     hls_segment_type(type?: EnumHLSSegmentType): ITranscoder {
-        return this.#setOption(OptionFactory.CreateEnumOption('-hls_segment_type', _.isNil(type) ? EnumHLSSegmentType.MPEGTS : type, 7.2));
+        type = _.isNil(type) ? EnumHLSSegmentType.MPEGTS : type;
+        return this.#setOption(OptionFactory.CreateEnumOption('-hls_segment_type', type, 7.2));
     }
 
+    /**
+     * Set hls output file duration time.
+     * @param time {number} hls segment duration time.
+     * @returns {ITranscoder}
+     */
     hls_time(time?: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-hls_time', _.isNil(time) ? 0 : time, 7));
     }
 
+    /**
+     * Set no subtitle output.
+     * @param confirm {boolean} confirm no output subtitle
+     * @returns {ITranscoder}
+     */
     sn(confirm?: boolean): ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-sn', confirm, 6));
     }
 
+    /**
+     * Set Quality/Speed ratio modifier for VPx codec, default is 1.
+     * This option can be used for libvpx only.
+     * @param cpu_used {number} VPx codec Quality/Speed ratio modifier
+     * @returns {ITranscoder}
+     */
     cpu_used(cpu_used?: number): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
-        if (!_.isNil(codec_option)) {
-            return this.#setOption(OptionFactory.CreateNumberOption('-cpu-used', _.isNil(cpu_used) ? 1 : cpu_used, 4.2));
-        }
-        return this;
+        cpu_used = _.isNil(cpu_used) ? 1 : cpu_used;
+        return this.#setOption(OptionFactory.CreateNumberOption(
+            '-cpu-used',
+            cpu_used,
+            4.2,
+            false,
+            Transcoder.H26X_OPTION_NAMES,
+            0,
+            8
+        ));
     }
 
+    /**
+     * Set time to spend encoding, default is 
+     * This option can be used for libvpx only.EnumVPXDeadline.REALTIME
+     * @param deadline {EnumVPXDeadline} time to spend encoding
+     * @returns {ITranscoder}
+     */
     deadline(deadline?: EnumVPXDeadline): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
-        if (!_.isNil(codec_option)) {
-            return this.#setOption(OptionFactory.CreateEnumOption('-deadline', _.isNil(deadline) ? EnumVPXDeadline.REALTIME : deadline, 4.2));
-        }
-        return this;
+        deadline = _.isNil(deadline)
+            ? EnumVPXDeadline.REALTIME
+            : deadline;
+        return this.#setOption(OptionFactory.CreateEnumOption(
+            '-deadline',
+            deadline,
+            4.2,
+            false,
+            Transcoder.H26X_OPTION_NAMES,
+        ));
     }
 
+    /**
+     * Set enable or not enable frame parallel decodability features, default is true
+     * This option can be used for libvpx only.
+     * @param enable {boolean} enable frame parallel decodability features
+     * @returns {ITranscoder}
+     */
     frame_parallel(enable?: boolean): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
-        if (!_.isNil(codec_option)) {
-            return this.#setOption(OptionFactory.CreateStringOption('-frame-parallel', _.isNil(enable) ? "1" : enable ? "1" : "0", 4.2));
-        }
-        return this;
+        return this.#setOption(OptionFactory.CreateStringOption(
+            '-frame-parallel',
+            _.isNil(enable)
+                ? "1"
+                : enable
+                    ? "1"
+                    : "0",
+            4.2,
+            false,
+            Transcoder.H26X_OPTION_NAMES
+        ));
     }
 
+    /**
+     * Set level option for libvpx, default is -1
+     * This option can be used for libvpx only.
+     * @param level {number} specify level
+     * @returns 
+     */
     level(level?: number): ITranscoder {
-        const codec_option = _.find(this._options, opt => opt.getName() === '-c:v' && opt.getValue().includes('libvpx'));
-        if (!_.isNil(codec_option)) {
-            return this.#setOption(OptionFactory.CreateNumberOption('-level', _.isNil(level) ? 6.2 : level, 4.2));
-        }
-        return this;
+        return this.#setOption(OptionFactory.CreateNumberOption(
+            '-level',
+            _.isNil(level) ? -1 : level,
+            4.2,
+            false,
+            Transcoder.H26X_OPTION_NAMES,
+            -1,
+            6.2
+        ));
     }
 
     quality(quality?: EnumVPXQuality): ITranscoder {
@@ -268,6 +440,11 @@ export class Transcoder implements ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-minrate', bit_rate, 4.9));
     }
 
+    /**
+     * Set no video output.
+     * @param confirm {boolean} confirm no output video
+     * @returns {ITranscoder}
+     */
     vn(confirm?: boolean): ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-vn', confirm, 4.9, false, Transcoder.VIDEO_OPTION_NAMES));
     }
