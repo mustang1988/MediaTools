@@ -3,6 +3,13 @@ import { ITranscoder } from "../type/execution/ITranscoder";
 import { Transcoder } from "./Transcoder";
 
 export class TranscoderFactory {
+    /**
+     * Create a Transcoder instance to transcode video file to h.264, aac, mp4 file.
+     * @param input {string} input file path.
+     * @param output {string} output file path.
+     * @param bin {string} ffmpeg binary path.
+     * @returns {ITranscoder}
+     */
     static ToMp4(
         input: string,
         output: string,
@@ -18,6 +25,13 @@ export class TranscoderFactory {
             .output(output)
     }
 
+    /**
+     * Create a Transcoder instance to transcode video file to vp9, opus, webm file.
+     * @param input {string} input file path.
+     * @param output {string} output file path.
+     * @param bin {string} ffmpeg binary path.
+     * @returns {ITranscoder}
+     */
     static ToWebM(
         input: string,
         output: string,
@@ -33,6 +47,13 @@ export class TranscoderFactory {
             .output(output)
     }
 
+    /**
+     * Create a Transcoder instance to transcode video file to h.264, aac, ts file list with m3u8.
+     * @param input {string} input file path.
+     * @param output {string} output file path.
+     * @param bin {string} ffmpeg binary path.
+     * @returns {ITranscoder}
+     */
     static ToHLS(
         input: string,
         output: string,
