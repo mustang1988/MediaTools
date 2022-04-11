@@ -2,8 +2,15 @@ import _ from 'lodash';
 import { DEFAULT_SUPPORTED_SEPARATORS } from '../type/Constants';
 import { Ratio } from "./Ratio";
 
+/* This class parses a string into a Ratio object. */
 export class RatioParser {
-
+    /**
+     * Parse a string into a Ratio object.
+     * If fail to parse, return null.
+     * @param string_ratio {string} string to parse
+     * @param separator {string} ratio separator, default is '/', ':' and '.'
+     * @returns 
+     */
     static ParseFromString(string_ratio: string | null, separator?: string): Ratio | null {
         if (_.isNil(string_ratio)) {
             return null;

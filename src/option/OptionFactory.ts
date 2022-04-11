@@ -8,6 +8,15 @@ import { RatioOption } from "./RatioOption";
 import { StringOption } from "./StringOption";
 
 export class OptionFactory {
+    /**
+     * Create a string option.
+     * @param name {string} option name.
+     * @param value {string} option value.
+     * @param priority {number} option priority, default 0.
+     * @param multiple {boolean} is option multiple, default false.
+     * @param conflicts {string[]} option conflicts, default [].
+     * @returns {StringOption}
+     */
     static CreateStringOption(
         name: string,
         value: string,
@@ -18,6 +27,15 @@ export class OptionFactory {
         return new StringOption(name, value, priority, multiple, conflicts);
     }
 
+    /**
+     * Create a number option.
+     * @param name {string} option name.
+     * @param value {number} option value.
+     * @param priority {number} option priority, default 0.
+     * @param multiple {boolean} is option multiple, default false.
+     * @param conflicts {string[]} option conflicts, default [].
+     * @returns {CreateNumberOption}
+     */
     static CreateNumberOption(
         name: string,
         value: number,
@@ -30,6 +48,15 @@ export class OptionFactory {
         return new NumberOption(name, value, priority, multiple, conflicts, min, max);
     }
 
+    /**
+     * Create a boolean option.
+     * @param name {string} option name.
+     * @param value {boolean} option value, default false.
+     * @param priority {number} option priority, default 0.
+     * @param multiple {boolean} is option multiple, default false.
+     * @param conflicts {string[]} option conflicts, default [].
+     * @returns {BooleanOption}
+     */
     static CreateBooleanOption(
         name: string,
         value?: boolean,
@@ -40,6 +67,16 @@ export class OptionFactory {
         return new BooleanOption(name, value, priority, multiple, conflicts);
     }
 
+    /**
+     * Create a ratio option.
+     * If the value is failed parse to ratio, return null.
+     * @param name {string} option name.
+     * @param value {string} option value.
+     * @param priority {number} option priority, default 0.
+     * @param multiple {boolean} is option multiple, default false.
+     * @param conflicts {string[]} option conflicts, default [].
+     * @returns {RatioOption | null}
+     */
     static CreateRatioOption(
         name: string,
         value: string,
@@ -51,6 +88,15 @@ export class OptionFactory {
         return _.isNil(v) ? null : new RatioOption(name, v, priority, multiple, conflicts);
     }
 
+    /**
+     * Create a enum option.
+     * @param name {string} option name.
+     * @param value {T} option value.
+     * @param priority {number} option priority, default 0.
+     * @param multiple {boolean} is option multiple, default false.
+     * @param conflicts {string[]} option conflicts, default [].
+     * @returns {EnumOption<T>}
+     */
     static CreateEnumOption<T>(
         name: string,
         value: T,
@@ -61,6 +107,12 @@ export class OptionFactory {
         return new EnumOption(name, value, priority, multiple, conflicts);
     }
 
+    /**
+     * Create a audio bit rate limit option by standar present by Google in YouTube.
+     * @see https://support.google.com/youtube/answer/1722171#zippy=%2Cbitrate
+     * @param media {IMedia | null} media to limit audio bit rate.
+     * @returns {NumberOption | null}
+     */
     static CreateAudioBitRateLimitOption(media?: IMedia | null): NumberOption | null {
         if (!_.isNil(media) && media.hasAudioStream()) {
             const channel_layout = media.getAudioStream()?.getChannelLayout()?.getValue();
@@ -78,6 +130,13 @@ export class OptionFactory {
         return null;
     }
 
+    /**
+     * Create a video bit rate limit option by standar present by Google in YouTube.
+     * @see https://support.google.com/youtube/answer/1722171#zippy=%2Cbitrate
+     * @param media {IMedia | null} media to limit video bit rate.
+     * @param target_frame_rate {RatioOption|undefined} transcode target frame rate option.
+     * @returns {NumberOption | null}
+     */
     static CreateVideoBitRateLimitOption(
         media?: IMedia | null,
         target_frame_rate?: RatioOption
