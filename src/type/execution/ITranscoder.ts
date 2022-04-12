@@ -70,9 +70,9 @@ export interface ITranscoder extends IExecutable<string> {
 
     tile_columns(columns?: number): ITranscoder;
 
-    preset(preset: EnumH26XPreset): ITranscoder;
+    preset(preset?: EnumH26XPreset): ITranscoder;
 
-    profile(profile: EnumH26XProfile): ITranscoder;
+    profile(profile?: EnumH26XProfile): ITranscoder;
 
     color_primaries(color_primaries: number): ITranscoder;
 

@@ -109,7 +109,7 @@ export class OptionFactory {
 
     /**
      * Create a audio bit rate limit option by standar present by Google in YouTube.
-     * @see https://support.google.com/youtube/answer/1722171#zippy=%2Cbitrate
+     * @link https://support.google.com/youtube/answer/1722171#zippy=%2Cbitrate
      * @param media {IMedia | null} media to limit audio bit rate.
      * @returns {NumberOption | null}
      */
@@ -132,7 +132,7 @@ export class OptionFactory {
 
     /**
      * Create a video bit rate limit option by standar present by Google in YouTube.
-     * @see https://support.google.com/youtube/answer/1722171#zippy=%2Cbitrate
+     * @link https://support.google.com/youtube/answer/1722171#zippy=%2Cbitrate
      * @param media {IMedia | null} media to limit video bit rate.
      * @param target_frame_rate {RatioOption|undefined} transcode target frame rate option.
      * @returns {NumberOption | null}

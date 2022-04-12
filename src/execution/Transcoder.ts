@@ -301,13 +301,13 @@ export class Transcoder implements ITranscoder {
 
     /**
      * Set time to spend encoding, default is 
-     * This option can be used for libvpx only.EnumVPXDeadline.REALTIME
+     * This option can be used for libvpx only.EnumVPXDeadline.GOOD
      * @param deadline {EnumVPXDeadline} time to spend encoding
      * @returns {ITranscoder}
      */
     deadline(deadline?: EnumVPXDeadline): ITranscoder {
         deadline = _.isNil(deadline)
-            ? EnumVPXDeadline.REALTIME
+            ? EnumVPXDeadline.GOOD
             : deadline;
         return this.#setOption(OptionFactory.CreateEnumOption(
             '-deadline',
@@ -356,82 +356,169 @@ export class Transcoder implements ITranscoder {
         ));
     }
 
+    /**
+     * Set quality option for libvpx, default is EnumVPXQuality.GOOD
+     * This option can be used for libvpx only.
+     * @param quality {EnumVPXQuality} quality
+     * @returns 
+     */
     quality(quality?: EnumVPXQuality): ITranscoder {
         return this.#setOption(OptionFactory.CreateEnumOption(
             '-quality',
-            _.isNil(quality) ? EnumVPXQuality.REALTIME : quality,
+            _.isNil(quality) ? EnumVPXQuality.GOOD : quality,
             4.2,
             false,
             Transcoder.H26X_OPTION_NAMES
         ));
     }
 
+    /**
+     * Enable row based multi-threading option for libvpx, default is true
+     * This option can be used for libvpx only.
+     * @param enable {boolean} enable row based multi-threading
+     * @returns {ITranscoder}
+     */
     row_mt(enable?: boolean): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption(
             '-row-mt',
-            _.isNil(enable) ? "1" : enable ? "1" : "0",
+            _.isNil(enable)
+                ? "1"
+                : enable
+                    ? "1"
+                    : "0",
             4.2,
             false,
             Transcoder.H26X_OPTION_NAMES
         ));
     }
 
+    /**
+     * Set speed option for libvpx, default is 1
+     * This option can be used for libvpx only.
+     * @param speed {number} speed
+     * @returns {ITranscoder}
+     */
     speed(speed?: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption(
             '-speed',
-            _.isNil(speed) ? 1 : speed,
+            _.isNil(speed)
+                ? 1
+                : speed,
             4.2,
             false,
             Transcoder.H26X_OPTION_NAMES
         ));
     }
 
+    /**
+     * Set number of tile columns to use for libvpx, default is 1
+     * This option can be used for libvpx only.
+     * @param columns {number} number of tile columns to use
+     * @returns 
+     */
     tile_columns(columns?: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption(
             '-tile-columns',
-            _.isNil(columns) ? 1 : columns,
+            _.isNil(columns)
+                ? 1
+                : columns,
             4.2,
             false,
             Transcoder.H26X_OPTION_NAMES
         ));
     }
 
-    preset(preset: EnumH26XPreset): ITranscoder {
+    /**
+     * Set preset option for libx264, default is EnumX264Preset.ULTRAFAST
+     * @param preset {EnumVPXPreset} preset
+     * @returns 
+     */
+    preset(preset?: EnumH26XPreset): ITranscoder {
         return this.#setOption(OptionFactory.CreateEnumOption(
             '-preset',
-            preset,
+            _.isNil(preset)
+                ? EnumH26XPreset.ULTRAFAST
+                : preset,
             4.2,
             false,
             Transcoder.VPX_OPTION_NAMES
         ));
     }
 
-    profile(profile: EnumH26XProfile): ITranscoder {
+    /**
+     * Set preset option for libx264, default is EnumH26XProfile.MAIN
+     * @param profile {EnumH26XProfile} profile
+     * @returns 
+     */
+    profile(profile?: EnumH26XProfile): ITranscoder {
         return this.#setOption(OptionFactory.CreateEnumOption(
             '-profile:v',
-            profile,
+            _.isNil(profile)
+                ? EnumH26XProfile.MAIN
+                : profile,
             4.3,
             false,
             Transcoder.VPX_OPTION_NAMES
         ));
     }
 
+    /**
+     * Set output colour primaries
+     * @param color_primaries {EnumH26XColorPrimaries} output colour primaries
+     * @returns {ITranscoder}
+     */
     color_primaries(color_primaries: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-color_primaries', color_primaries, 4.4));
     }
 
+    /**
+     * Set color range flag
+     * @param color_range {EnumH26XColorRange} color range flag
+     * @returns {ITranscoder}
+     */
     color_range(color_range: number): ITranscoder {
-        return this.#setOption(OptionFactory.CreateNumberOption('-color_range', color_range, 4.5));
+        return this.#setOption(OptionFactory.CreateNumberOption(
+            '-color_range',
+            color_range,
+            4.5,
+            false,
+            [],
+            -1,
+            1
+        ));
     }
 
+    /**
+     * Select colorspace
+     * @param colorspace {EnumH26XColorspace} colorspace
+     * @returns {ITranscoder}
+     */
     colorspace(colorspace: EnumColorspace): ITranscoder {
         return this.#setOption(OptionFactory.CreateEnumOption('-colorspace', colorspace, 4.6));
     }
 
+    /**
+     * Select color transfer
+     * @param color_trc {number} color_trc
+     * @returns {ITranscoder}
+     */
     color_trc(color_trc: number): ITranscoder {
-        return this.#setOption(OptionFactory.CreateNumberOption('-color_trc', color_trc, 4.7));
+        return this.#setOption(OptionFactory.CreateNumberOption(
+            '-color_trc',
+            color_trc,
+            4.7,
+            false,
+            [],
+            -1,
+            1
+        ));
     }
 
+    /**
+     * Set frame rate
+     * @param frame_rate {string} frame rate ratio string
+     * @returns {ITranscoder}
+     */
     r(frame_rate: string): ITranscoder {
         const opt = OptionFactory.CreateRatioOption('-r', frame_rate, 4.9)
         if (!_.isNil(opt)) {
@@ -440,14 +527,29 @@ export class Transcoder implements ITranscoder {
         return this;
     }
 
+    /**
+     * Set group of pictures size
+     * @param gop {number} gop
+     * @returns {ITranscoder}
+     */
     g(gop: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-g', gop, 4.8));
     }
 
+    /**
+     * Set max bit rate
+     * @param bit_rate {number} bit rate
+     * @returns {ITranscoder}
+     */
     maxrate(bit_rate: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-maxrate', bit_rate, 4.9));
     }
 
+    /**
+     * Set min bit rate
+     * @param bit_rate {number} bit rate
+     * @returns {ITranscoder}
+     */
     minrate(bit_rate: number): ITranscoder {
         return this.#setOption(OptionFactory.CreateNumberOption('-minrate', bit_rate, 4.9));
     }
@@ -461,15 +563,30 @@ export class Transcoder implements ITranscoder {
         return this.#setOption(OptionFactory.CreateBooleanOption('-vn', confirm, 4.9, false, Transcoder.VIDEO_OPTION_NAMES));
     }
 
+    /**
+     * Set pixel format
+     * @param pix_fmt {string} pixel format
+     * @returns {ITranscoder}
+     */
     pix_fmt(pix_fmt: string): ITranscoder {
         return this.#setOption(OptionFactory.CreateStringOption('-pix_fmt', pix_fmt, 4.1));
     }
 
+    /**
+     * Set video bit rate
+     * @param bit_rate {number} bit rate
+     * @returns {ITranscoder}
+     */
     b_V(bit_rate: number): ITranscoder {
         this._limit_bit_rate = true;
         return this.#setOption(OptionFactory.CreateNumberOption('-b:v', bit_rate, 4.9));
     }
 
+    /**
+     * Set video codec
+     * @param codec {string} codec
+     * @returns {ITranscoder}
+     */
     c_v(codec: string): ITranscoder {
         if (codec.includes('libx26')) {
             // remove vpx options
@@ -496,6 +613,10 @@ export class Transcoder implements ITranscoder {
         return this;
     }
 
+    /**
+     * Execute transcode command async
+     * @returns Promise<string>
+     */
     execute(): Promise<string> {
         const command = this.#buildCommand().join(COMMAND_SEPERATOR);
         return new Promise((resolve, reject) => {
@@ -512,6 +633,10 @@ export class Transcoder implements ITranscoder {
         });
     }
 
+    /**
+     * Execute transcode command sync
+     * @returns {string}
+     */
     executeSync(): string {
         try {
             if (this.checkBin()) {
@@ -524,10 +649,18 @@ export class Transcoder implements ITranscoder {
         }
     }
 
+    /**
+     * Is bit rate limit manual
+     * @returns {boolean}
+     */
     isBitRateLimit(): boolean {
         return this._limit_bit_rate;
     }
 
+    /**
+     * Check ffmpeg binary executable
+     * @returns {boolean}
+     */
     checkBin(): boolean {
         const check_cmd = `${this._bin} -version`;
         try {
@@ -538,8 +671,15 @@ export class Transcoder implements ITranscoder {
         }
     }
 
+    /**
+     * Set a option into option list
+     * @param option {IOption} option
+     * @returns {ITranscoder}
+     */
     #setOption(option: IOption<any>): ITranscoder {
+        // if option not support multiple set, remove exists first
         !option.isMultiple() && _.remove(this._options, opt => opt.getName() === option.getName());
+        // if option has conflict options, remove exists conflicts first
         !_.isEmpty(option.getConflicts()) && _.remove(this._options, opt => option.getConflicts().includes(opt.getName()));
         this._options.push(option);
         return this;
@@ -552,6 +692,10 @@ export class Transcoder implements ITranscoder {
     //     return this;
     // }
 
+    /**
+     * Get command options by array format
+     * @returns {string[]}
+     */
     #buildCommand(): string[] {
         this.#autoLimitBitRate();
         this._options.sort((o1, o2) => o1.getPriority() - o2.getPriority());
@@ -562,10 +706,15 @@ export class Transcoder implements ITranscoder {
         return _.compact(args);
     }
 
+    /**
+     * Auto limit bit rate for video stream and audio stream
+     */
     #autoLimitBitRate(): void {
         if (!this._limit_bit_rate) {
+            // auto limit audio bit rate
             const audio_bit_limit_opt = OptionFactory.CreateAudioBitRateLimitOption(this._source_media);
             !_.isNil(audio_bit_limit_opt) && this.#setOption(audio_bit_limit_opt);
+            // auto limit video bit rate
             const frame_rate_option = <RatioOption>_.find(this._options, opt => opt.getName() === '-r');
             const video_bit_limit_opt = OptionFactory.CreateVideoBitRateLimitOption(this._source_media, frame_rate_option);
             !_.isNil(video_bit_limit_opt) && this.#setOption(video_bit_limit_opt);

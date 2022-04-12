@@ -1,6 +1,5 @@
 import { exec, execSync } from "child_process";
 import _ from "lodash";
-import { isConstructorTypeNode } from "typescript";
 import { EnumLogLevel } from "../enumeration/EnumLogLevel";
 import { EnumPrintFormat } from "../enumeration/EnumPrintFormat";
 import { EnumSelectStream } from "../enumeration/EnumSelectStream";
@@ -18,6 +17,10 @@ export class Reader implements IReader {
     _bin: string;
     _options: IOption<any>[];
 
+    /**
+     * Reader constructor.
+     * @param bin {string} ffprobe binary path, default is "ffprobe"
+     */
     constructor(bin?: string) {
         this._bin = _.isUndefined(bin) ? 'ffprobe' : bin;
         this._options = [OptionFactory.CreateStringOption(

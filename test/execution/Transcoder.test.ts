@@ -299,7 +299,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         transcoder.c_v('libvpx-vp9').deadline();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-deadline')?.getValue(), EnumVPXDeadline.REALTIME);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-deadline')?.getValue(), EnumVPXDeadline.GOOD);
     });
     it('frame_parallel(enable?: boolean)', () => {
         const transcoder = new Transcoder();
@@ -345,7 +345,7 @@ describe('Transcoder.ts', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
         transcoder.c_v('libvpx-vp9').quality();
-        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-quality')?.getValue(), EnumVPXQuality.REALTIME);
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-quality')?.getValue(), EnumVPXQuality.GOOD);
     });
     it('row_mt(enable?: boolean)', () => {
         const transcoder = new Transcoder();
@@ -400,6 +400,12 @@ describe('Transcoder.ts', () => {
         transcoder.c_v('libx264').preset(preset);
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-preset')?.getValue(), preset);
     });
+    it('preset(preset: EnumH26XPreset) default', () => {
+        const transcoder = new Transcoder();
+        assert.notDeepEqual(transcoder, null);
+        transcoder.c_v('libx264').preset();
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-preset')?.getValue(), EnumH26XPreset.ULTRAFAST);
+    });
     it('preset(preset: EnumH26XPreset) not H.26x codec', () => {
         const transcoder = new Transcoder();
         assert.notDeepEqual(transcoder, null);
@@ -412,6 +418,12 @@ describe('Transcoder.ts', () => {
         const profile = EnumH26XProfile.MAIN;
         transcoder.c_v('libx264').profile(profile);
         assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-profile:v')?.getValue(), profile);
+    });
+    it('profile(profile: EnumH26XProfile) default', () => {
+        const transcoder = new Transcoder();
+        assert.notDeepEqual(transcoder, null);
+        transcoder.c_v('libx264').profile();
+        assert.deepEqual(_.find(transcoder._options, opt => opt.getName() === '-profile:v')?.getValue(), EnumH26XProfile.MAIN);
     });
     it('profile(profile: EnumH26XProfile) not H.26x codec', () => {
         const transcoder = new Transcoder();
