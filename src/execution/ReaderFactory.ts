@@ -17,14 +17,14 @@ export class ReaderFactory {
             .i(file)
             .executeSync()
     }
-    
+
     /**
      * Read media file metadata async.
      * @param file {string} input file path
      * @param bin {string} ffprobe binary path
      * @returns {Promise<IMedia>}
      */
-    static ReadFromFile(file: string, bin?: string): Promise<IMedia> {
+    static ReadFromFile(file: string, bin?: string): Promise<IMedia | null> {
         return new Reader(bin)
             .v()
             .of()

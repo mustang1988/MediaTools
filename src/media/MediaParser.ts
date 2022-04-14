@@ -18,7 +18,7 @@ export class MediaParser {
      * @param bin {string} ffprobe binary path
      * @returns {Promise<IMedia>}
      */
-    static ReadFromFile(file: string, bin?: string): Promise<IMedia> {
+    static ReadFromFile(file: string, bin?: string): Promise<IMedia | null> {
         return ReaderFactory.ReadFromFile(file, bin);
     }
 }

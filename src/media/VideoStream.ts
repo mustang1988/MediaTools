@@ -169,10 +169,25 @@ export class VideoStream extends Stream implements IVideoStream {
     hasRefs(): boolean {
         return !_.isNil(this.refs);
     }
-    
+
     isCodec(codec: string): boolean {
         const codec_name = this.getCodecName();
         const codec_long_name = this.getCodecLongName();
-        return codec_name?.getValue().includes(codec) || codec_long_name?.getValue().includes(codec) || false;
+        return codec_name?.getValue().includes(this.#transformTargetCodecName(codec))
+            || codec_long_name?.getValue().includes(this.#transformTargetCodecName(codec))
+            || false;
+    }
+
+    #transformTargetCodecName(codec: string): string {
+        switch (codec) {
+            case 'libx264':
+                return 'h264';
+            case 'libx265':
+                return 'hevc';
+            case 'libvpx-vp9':
+                return 'vp9'
+            default:
+                return codec
+        }
     }
 }
